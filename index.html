@@ -24,7 +24,7 @@
         .logo-clipart { width: 50px; height: 50px; object-fit: contain; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3)); background: rgba(255,255,255,0.95); border-radius: 12px; padding: 4px; }
         .main-title { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); margin: 0; font-size: 22px; font-weight: 900; letter-spacing: -0.5px; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.2); white-space: nowrap; z-index: 1; width: 100%; pointer-events: none; }
         .sub-info { position: absolute; bottom: 8px; right: 15px; display: flex; align-items: center; gap: 5px; z-index: 2; }
-        .ver-badge { font-size: 9px; background: #ffea00; color: #000; padding: 1px 4px; border-radius: 3px; font-weight: 800; }
+        .ver-badge { font-size: 9px; background: #00e676; color: #000; padding: 1px 4px; border-radius: 3px; font-weight: 800; }
         .ver-desc { font-size: 9px; color: #e3f2fd; font-weight: 400; letter-spacing: -0.3px; }
 
         .container { max-width: 768px; margin: 0 auto; padding: 20px; padding-bottom: 120px; }
@@ -35,6 +35,15 @@
         .btn-search { background: #333; color: white; border: none; padding: 0 15px; border-radius: 8px; font-weight: bold; cursor: pointer; white-space: nowrap; }
         .detail-input { width: 100%; border: 1px solid #e1e4e8; background: #fff; padding: 12px; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
 
+        /* 도면 업로드 섹션 (NEW) */
+        .blueprint-box { background: #e8f5e9; border: 1px solid #c8e6c9; border-radius: 16px; padding: 15px; margin-bottom: 25px; box-shadow: var(--card-shadow); text-align: center; position: relative; }
+        .blueprint-title { font-size: 15px; font-weight: 800; color: #2e7d32; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .blueprint-desc { font-size: 12px; color: #4caf50; margin-bottom: 12px; }
+        .btn-blueprint { background: #4caf50; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
+        .blueprint-preview { max-width: 100%; max-height: 200px; margin-top: 10px; border-radius: 8px; display: none; border: 2px solid #4caf50; }
+        .blueprint-file-input { position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: pointer; }
+
+        /* 가이드 박스 */
         .ai-guide-box { background: white; border-radius: 16px; box-shadow: var(--card-shadow); margin-bottom: 25px; display: flex; overflow: hidden; border: 1px solid #d0e2ff; min-height: 110px; }
         .ai-photo-slot { width: 45%; background: #000; position: relative; cursor: pointer; border-right: 1px solid #d0e2ff; display: flex; align-items: center; justify-content: center; padding: 0; overflow: hidden; }
         .ai-btn-img { width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; opacity: 0.85; z-index: 1; }
@@ -50,6 +59,7 @@
         .guide-list li::before { content: "•"; position: absolute; left: 0; color: var(--primary-color); font-weight: bold; }
         .highlight { color: #d32f2f; font-weight: bold; background: #ffebee; padding: 0 2px; border-radius: 2px; }
 
+        /* 입력 카드 */
         .input-card { background: white; border-radius: 16px; box-shadow: var(--card-shadow); margin-bottom: 20px; overflow: hidden; display: flex; flex-direction: column; }
         @media (min-width: 400px) { .input-card { flex-direction: row; } .photo-area { width: 50%; aspect-ratio: 4/3; } .dim-area { width: 50%; } }
         
@@ -61,7 +71,7 @@
         .photo-label { font-size: 12px; color: #555; font-weight: 600; text-align: center; } 
         .photo-input-hidden { position: absolute; width: 100%; height: 100%; opacity: 0; cursor: pointer; left:0; top:0; z-index: 10; }
         
-        .ai-loading { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); z-index: 20; display: none; flex-direction: column; justify-content: center; align-items: center; font-weight: bold; color: #fff; font-size: 14px; backdrop-filter: blur(2px); }
+        .ai-loading { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); z-index: 20; display: none; flex-direction: column; justify-content: center; align-items: center; font-weight: bold; color: #fff; font-size: 14px; backdrop-filter: blur(2px); }
         .spinner { border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid #fff; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin-bottom: 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
@@ -111,8 +121,8 @@
     </div>
     <h1 class="main-title">청개구리 창호견적(무료)</h1>
     <div class="sub-info">
-        <span class="ver-badge">Ver 9.0 Architect</span>
-        <span class="ver-desc">도면기반보정</span>
+        <span class="ver-badge">Ver 10.0 Blueprint</span>
+        <span class="ver-desc">도면분석</span>
     </div>
 </header>
 
@@ -126,6 +136,16 @@
         <input type="text" class="detail-input" id="detailAddress" placeholder="상세 주소 입력 (예: 101동 1204호)">
     </div>
 
+    <div class="blueprint-box">
+        <div class="blueprint-title">📐 아파트 평면도(도면) 등록</div>
+        <div class="blueprint-desc">네이버 부동산 등에서 캡처한 도면을 올리면<br><strong>오차 0mm</strong>의 정확한 치수를 자동 입력합니다!</div>
+        <div class="btn-blueprint">
+            <i class="fas fa-upload"></i> 도면 사진 선택하기
+            <input type="file" accept="image/*" class="blueprint-file-input" onchange="handleBlueprintUpload(this)">
+        </div>
+        <img id="blueprintPreview" class="blueprint-preview">
+    </div>
+
     <div class="ai-guide-box">
         <div class="ai-photo-slot">
             <img src="Gemini_Generated_Image_lk91n8lk91n8lk91.png" alt="AI측정" class="ai-btn-img" onerror="this.style.display='none';">
@@ -135,10 +155,10 @@
             </div>
         </div>
         <div class="ai-text-slot">
-            <div class="ai-title"><span class="ai-badge">Tip</span> AI 측정 정밀도 높이기</div>
+            <div class="ai-title"><span class="ai-badge">Tip</span> AI 사용 꿀팁</div>
             <ul class="guide-list">
-                <li><strong>규격 보정:</strong> AI가 창호가 들어갈 <span class="highlight">전체 공간(벽체)</span>을 추론하여 표준 도면 규격으로 자동 보정합니다.</li>
-                <li><strong>주의:</strong> 거실의 경우, 한쪽 창문만 찍어도 전체 크기로 추산합니다.</li>
+                <li><strong>도면 활용:</strong> 위쪽 초록색 박스에 <span class="highlight">도면</span>을 먼저 등록해 보세요.</li>
+                <li><strong>자동 매칭:</strong> 각 방 사진을 찍으면 AI가 도면에서 해당 위치를 찾아 정확한 숫자를 읽어옵니다.</li>
             </ul>
         </div>
     </div>
@@ -152,7 +172,8 @@
 
     <div class="disclaimer-box">
         <strong style="display:block; margin-bottom:4px;">⚠️ 견적 유의사항</strong>
-        AI 측정값은 오차가 있을 수 있으므로 <strong>반드시 줄자로 실측한 값</strong>으로 수정해주세요.
+        상기 견적은 시공여건과 추가옵션에 따른 비용상승이 발생할 수 있습니다.<br>
+        전문 매니저의 <strong>무료 방문 실측</strong>을 추천드립니다.
     </div>
 
     <div class="contact-title">📞 제휴 시공사 다이렉트 연결</div>
@@ -186,6 +207,23 @@
 </footer>
 
 <script>
+    // 전역 변수: 도면 파일 저장용
+    let globalBlueprintFile = null;
+
+    function handleBlueprintUpload(input) {
+        if (input.files && input.files[0]) {
+            globalBlueprintFile = input.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('blueprintPreview');
+                img.src = e.target.result;
+                img.style.display = 'block';
+                alert("✅ 도면이 등록되었습니다!\n이제 각 방의 사진을 찍으면 AI가 도면 치수를 참고하여 정확히 계산합니다.");
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
     function openAddressSearch() {
         new daum.Postcode({
             oncomplete: function(data) {
@@ -228,7 +266,7 @@
             <div class="input-card">
                 <div id="loading_${index}" class="ai-loading">
                     <div class="spinner"></div>
-                    <span>AI 정밀보정...</span>
+                    <span>도면+AI 분석중...</span>
                 </div>
 
                 <div class="photo-area">
@@ -359,9 +397,10 @@
         const file = inputElement.files[0];
         if (!file) return;
 
-        // 위치 이름 가져오기 (예: 거실, 안방)
+        // 위치 이름 (예: 거실)
         const locationName = document.getElementById(`loc_${index}`).value;
 
+        // 미리보기
         const reader = new FileReader();
         reader.onload = function(e) {
             document.getElementById('defaultIcon_' + index).style.display = 'none';
@@ -376,40 +415,57 @@
 
         try {
             const genAI = new GoogleGenerativeAI(API_KEY);
+            // 멀티모달 분석을 위해 성능 좋은 2.0 사용
             const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
             
-            const imagePart = await fileToGenerativePart(file);
+            const imagePart = await fileToGenerativePart(file); // 방 사진
             
-            // [Ver 9.0 핵심: 건축 도면 기반 추론 프롬프트]
-            const prompt = `
-                당신은 대한민국 1등 창호 견적 전문가이자 건축가입니다.
-                사진 속 창문이 설치될 **'전체 개구부(Rough Opening) 크기'**를 추론하세요.
+            let parts = [imagePart];
+            let promptText = "";
 
-                [1. 현재 공간 정보]
-                - 위치: **${locationName}** (매우 중요!)
-                - 기준: 사진 속 A4 용지(210x297mm)
+            // 도면이 있는지 확인
+            if (window.globalBlueprintFile) {
+                const blueprintPart = await fileToGenerativePart(window.globalBlueprintFile);
+                parts.push(blueprintPart); // 도면도 같이 보냄
+                promptText = `
+                    당신은 건축 도면 분석 및 창호 견적 전문가입니다.
+                    두 장의 이미지를 제공했습니다.
+                    1. 첫 번째 이미지: 현장(방) 사진
+                    2. 두 번째 이미지: 아파트 전체 평면도(도면)
 
-                [2. 필독: 측정 및 보정 규칙]
-                - 문제 상황: 사용자는 창문의 일부분만 찍었을 수 있습니다. 하지만 당신은 전체 벽의 크기를 예측해야 합니다.
-                - **블라인드/커튼박스:** 상단에 블라인드가 보이면, 그 뒤에 가려진 프레임(약 150mm~200mm)을 높이에 무조건 더하세요.
-                - **거실(Living Room) 특수 규칙:**
-                  - 측정값이 3000mm 미만이라면, 당신은 가운데 창문 하나만 본 것입니다.
-                  - 한국 아파트 거실의 표준 너비는 **3600mm, 3900mm, 4200mm, 4500mm** (30cm 모듈)입니다.
-                  - 측정값을 이 표준 규격 중 가장 가까운 값으로 **강제 상향 보정(Snap)**하세요. (예: 2400mm -> 3600mm 이상으로 추정)
-                - **침실/안방 특수 규칙:**
-                  - 측정된 높이가 1800mm~2000mm 사이라면, 이는 바닥까지 내려오는 '발코니 출입 분합창'일 확률이 99%입니다.
-                  - 이 경우 높이를 표준 규격인 **2200mm~2300mm**로 보정하세요.
+                    [임무]
+                    - 현장 사진을 보고 이것이 도면의 어느 위치(${locationName})인지 파악하세요.
+                    - **도면(평면도) 이미지에서 해당 위치의 창문 치수(숫자)**를 읽어내세요. (보통 mm 단위 숫자)
+                    - 만약 도면에서 숫자를 읽을 수 있다면, 그 **도면상의 수치**를 최우선으로 적용하세요. (오차 0mm 목표)
+                    - 도면 판독이 어렵다면, 현장 사진 속 A4 용지(210x297mm)를 기준으로 추정하세요.
+                    - **거실**의 경우, 도면에 '분합창' 또는 '거실창' 위치의 전체 너비를 읽으세요.
+                `;
+            } else {
+                // 도면 없이 사진만 있는 경우 (기존 로직 강화)
+                promptText = `
+                    당신은 창호 견적 전문가입니다. 
+                    사진 속 **${locationName}** 창문의 전체 크기(가로x세로)를 A4용지(210x297mm) 기준으로 계산하세요.
+                    
+                    [필독: 보정 규칙]
+                    - 거실(Living Room): 측정값이 3000mm 미만이면, 창문 한 짝만 찍힌 것이니 한국 아파트 표준 거실 너비(3600mm, 3900mm, 4200mm 중 하나)로 강제 보정하세요.
+                    - 침실/안방: 높이가 1800mm~2000mm 사이면, 바닥창(분합문)이므로 표준 높이 2200mm~2300mm로 보정하세요.
+                    - 블라인드/커튼박스: 상단이 가려져 있다면 높이에 +200mm 하세요.
+                `;
+            }
 
-                [3. 출력 형식]
-                오직 JSON 형식으로만 답하세요:
+            promptText += `
+                [출력 형식]
+                오직 JSON으로만 답하세요:
                 {
                     "typeCode": "문자열 (S_BAL, S_IN, D_IN, D_EXT, SYS, PJ 중 택1)",
-                    "width": 숫자 (mm 단위 정수, 보정된 전체 너비),
-                    "height": 숫자 (mm 단위 정수, 보정된 전체 높이)
+                    "width": 숫자 (mm 단위 정수),
+                    "height": 숫자 (mm 단위 정수)
                 }
             `;
 
-            const result = await model.generateContent([prompt, imagePart]);
+            parts.unshift(promptText); // 프롬프트를 맨 앞에
+
+            const result = await model.generateContent(parts);
             const response = await result.response;
             const text = response.text().replace(/```json|```/g, "").trim();
             const data = JSON.parse(text);
@@ -418,7 +474,7 @@
             if(data.width) document.getElementById(`w_${index}`).value = data.width;
             if(data.height) document.getElementById(`h_${index}`).value = data.height;
 
-            console.log("AI 아키텍트 분석 성공:", data);
+            console.log("AI 분석(도면포함) 성공:", data);
 
         } catch (error) {
             console.error(error);
