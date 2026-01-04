@@ -16,7 +16,6 @@
     </script>
 
     <style>
-        /* [스타일 정의] */
         :root { --primary-color: #1a73e8; --bg-color: #f0f4f8; --card-shadow: 0 4px 20px rgba(0,0,0,0.08); }
         body { font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif; background-color: var(--bg-color); margin: 0; padding: 0; color: #333; -webkit-font-smoothing: antialiased; }
 
@@ -54,7 +53,7 @@
         .guide-list li::before { content: "•"; position: absolute; left: 0; color: var(--primary-color); font-weight: bold; }
         .highlight { color: #d32f2f; font-weight: bold; background: #ffebee; padding: 0 2px; border-radius: 2px; }
 
-        /* 입력 카드 (가로형 4:3) */
+        /* 입력 카드 */
         .input-card { background: white; border-radius: 16px; box-shadow: var(--card-shadow); margin-bottom: 20px; overflow: hidden; display: flex; flex-direction: column; }
         @media (min-width: 400px) { .input-card { flex-direction: row; } .photo-area { width: 50%; aspect-ratio: 4/3; } .dim-area { width: 50%; } }
         
@@ -118,8 +117,8 @@
     </div>
     <h1 class="main-title">청개구리 창호견적(무료)</h1>
     <div class="sub-info">
-        <span class="ver-badge">Ver 5.3</span>
-        <span class="ver-desc">Gemini 2.0</span>
+        <span class="ver-badge">Ver 6.0 Pro</span>
+        <span class="ver-desc">Stable</span>
     </div>
 </header>
 
@@ -271,7 +270,6 @@
         inputArea.innerHTML += html;
     });
 
-    // 가격 계산 로직
     const companyDB = {
         'A사': { name: 'A사 (표준)', specs: { 'S_IN': 13000, 'S_BAL': 14000, 'D_IN': 20000, 'D_EXT': 24000, 'SYS': 14000, 'PJ': 15000 } },
         'B사': { name: 'B사 (알뜰)', specs: { 'S_IN': 12500, 'S_BAL': 13500, 'D_IN': 19500, 'D_EXT': 23500, 'SYS': 13500, 'PJ': 14500 } },
@@ -362,6 +360,7 @@
 <script type="module">
     import { GoogleGenerativeAI } from "@google/generative-ai";
 
+    // 🔴 [사용자님 API 키] 이 부분에 유료 키를 넣으시면 제한이 풀립니다.
     const p1 = "AIzaSyAq7G2mE2qFuUi";
     const p2 = "f-";
     const p3 = "PgPDsXl1ppbY5_JK54";
@@ -381,39 +380,22 @@
         }
         reader.readAsDataURL(file);
 
-        // 2. AI 분석 시작 (2.0 Flash Experimental 사용)
+        // 2. AI 분석 시작 (로딩바 표시)
         const loadingOverlay = document.getElementById(`loading_${index}`);
         if(loadingOverlay) loadingOverlay.style.display = 'flex';
 
         try {
             const genAI = new GoogleGenerativeAI(API_KEY);
-            // [수정] 요청하신 Gemini 2.0 실험 버전 모델 적용
-            const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
+            // [복구 완료] 가장 안정적인 모델로 원복
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
             
             const imagePart = await fileToGenerativePart(file);
             
             const prompt = `
                 당신은 창호 견적 전문가입니다. 이 사진을 분석하여 JSON 형식으로만 답하세요.
-                
-                1. 창호 종류 판단 (typeCode):
-                   - "S_BAL": 발코니용 단창(난간 있음)
-                   - "S_IN": 내부용 단창(방 안쪽 창)
-                   - "D_IN": 내부용 이중창(창문이 두 겹)
-                   - "D_EXT": 확장형 이중창(두꺼운 프레임)
-                   - "SYS": 시스템창/터닝도어
-                   - "PJ": 프로젝트창
-                   (불확실하면 S_IN 추정)
-
-                2. 사이즈 측정 (width, height):
-                   - A4용지(210x297mm)가 보이면 비례식으로 창틀 전체 크기(mm) 계산.
-                   - 없으면 일반적 아파트 창문 규격 추정.
-                
-                3. 응답 형식 (오직 JSON만):
-                {
-                    "typeCode": "문자열",
-                    "width": 숫자,
-                    "height": 숫자
-                }
+                1. 창호 종류 (typeCode): "S_BAL"(발코니단창), "S_IN"(내부단창), "D_IN"(내부이중창), "D_EXT"(확장이중창), "SYS"(시스템/터닝), "PJ"(프로젝트).
+                2. 사이즈 (width, height): A4용지(210x297mm)가 보이면 비례식으로 창틀 전체 크기 계산. 없으면 일반 아파트 규격 추정.
+                3. 응답 형식: {"typeCode": "문자열", "width": 숫자, "height": 숫자}
             `;
 
             const result = await model.generateContent([prompt, imagePart]);
@@ -421,7 +403,6 @@
             const text = response.text().replace(/```json|```/g, "").trim();
             const data = JSON.parse(text);
 
-            // 데이터 입력
             if(data.typeCode) document.getElementById(`type_${index}`).value = data.typeCode;
             if(data.width) document.getElementById(`w_${index}`).value = data.width;
             if(data.height) document.getElementById(`h_${index}`).value = data.height;
@@ -430,7 +411,14 @@
 
         } catch (error) {
             console.error(error);
-            alert("⚠️ AI 분석 오류 발생:\n" + error.message + "\n\n(직접 치수를 입력해주세요)");
+            // 에러 발생 시 안내 메시지
+            let msg = "⚠️ AI 분석 오류 발생\n";
+            if (error.message.includes("429")) {
+                msg += "❗ 무료 사용량이 초과되었습니다.\n(많은 사용자를 위해 유료 플랜 전환이 필요합니다)";
+            } else {
+                msg += error.message;
+            }
+            alert(msg + "\n\n(직접 치수를 입력해주세요)");
         } finally {
             if(loadingOverlay) loadingOverlay.style.display = 'none';
         }
@@ -441,12 +429,7 @@
             const reader = new FileReader();
             reader.onloadend = () => {
                 const base64Data = reader.result.split(',')[1];
-                resolve({
-                    inlineData: {
-                        data: base64Data,
-                        mimeType: file.type
-                    }
-                });
+                resolve({ inlineData: { data: base64Data, mimeType: file.type } });
             };
             reader.readAsDataURL(file);
         });
