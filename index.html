@@ -14,7 +14,7 @@
       }
     </script>
     <style>
-        /* [플랫폼 스타일 정의] */
+        /* [플랫폼 스타일 정의 - Basic Code 기반 + AI 기능] */
         :root {
             --primary-color: #1a73e8;
             --bg-color: #f0f4f8;
@@ -64,22 +64,16 @@
         .guide-list li::before { content: "•"; position: absolute; left: 0; color: var(--primary-color); font-weight: bold; }
         .highlight { color: #d32f2f; font-weight: bold; background: #ffebee; padding: 0 2px; border-radius: 2px; }
 
-        /* [수정] 입력 카드 및 사진 미리보기 (가로형 4:3 비율 적용) */
-        .input-card { background: white; border-radius: 16px; box-shadow: var(--card-shadow); margin-bottom: 20px; overflow: hidden; display: flex; flex-direction: column; /* 모바일에서 사진을 크게 보기 위해 상하 배치 추천, 하지만 요청대로 4:3 유지하며 배치 */ }
-        @media (min-width: 400px) {
-            .input-card { flex-direction: row; }
-            .photo-area { width: 50%; aspect-ratio: 4/3; } /* 가로형 4:3 비율 */
-            .dim-area { width: 50%; }
-        }
+        /* 입력 카드 (가로형 4:3) */
+        .input-card { background: white; border-radius: 16px; box-shadow: var(--card-shadow); margin-bottom: 20px; overflow: hidden; display: flex; flex-direction: column; }
+        @media (min-width: 400px) { .input-card { flex-direction: row; } .photo-area { width: 50%; aspect-ratio: 4/3; } .dim-area { width: 50%; } }
         
         .photo-area { 
-            width: 100%; aspect-ratio: 4/3; /* 모바일 기본 가로형 비율 */
+            width: 100%; aspect-ratio: 4/3; 
             background: #000; border-right: 1px solid #edf2f7; border-bottom: 1px solid #edf2f7;
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
             position: relative; cursor: pointer; overflow: hidden; 
         }
-        
-        /* [수정] 사진이 잘리지 않고 전체가 보이도록 contain 적용 */
         .photo-preview { width: 100%; height: 100%; object-fit: contain; display: none; background: #000; } 
         
         .default-icon-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; background: #f8fafc; }
@@ -87,7 +81,6 @@
         .camera-circle i { font-size: 20px; color: var(--primary-color); font-style: normal; }
         .photo-label { font-size: 12px; color: #555; font-weight: 600; text-align: center; } 
         
-        /* [수정] capture 속성 제거하여 갤러리/카메라 선택 가능하게 함 */
         .photo-input-hidden { position: absolute; width: 100%; height: 100%; opacity: 0; cursor: pointer; left:0; top:0; z-index: 10; }
         
         /* 로딩 오버레이 */
@@ -109,7 +102,7 @@
         select, input[type="number"] { width: 100%; padding: 0 10px; height: 42px; border: 1px solid #e1e4e8; border-radius: 8px; font-size: 14px; background: #fff; box-sizing: border-box; }
         .form-row { display: flex; gap: 8px; }
 
-        /* [수정] 버튼 그룹 (업체별 가격비교, 비교 저장 1열 배치) */
+        /* 버튼 그룹 */
         .btn-group { display: flex; gap: 10px; margin-top: 10px; }
         .btn-calc { flex: 6; padding: 18px; background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%); color: white; border: none; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer; box-shadow: 0 8px 15px rgba(26, 115, 232, 0.3); }
         .btn-save { flex: 4; padding: 18px; background: #ff9800; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer; box-shadow: 0 8px 15px rgba(255, 152, 0, 0.3); display: flex; align-items: center; justify-content: center; gap:5px; }
@@ -151,8 +144,8 @@
     </div>
     <h1 class="main-title">청개구리 창호견적(무료)</h1>
     <div class="sub-info">
-        <span class="ver-badge">Ver 5.0 AI</span>
-        <span class="ver-desc">AI + 가로형</span>
+        <span class="ver-badge">Ver 5.1 AI-Debug</span>
+        <span class="ver-desc">에러상세확인</span>
     </div>
 </header>
 
@@ -173,7 +166,7 @@
                 <span class="ai-arrow-icon">▲</span>
                 <span class="ai-arrow-text">A4 위치</span>
             </div>
-            </div>
+        </div>
         <div class="ai-text-slot">
             <div class="ai-title"><span class="ai-badge">Tip</span> 치수 측정 방법</div>
             <ul class="guide-list">
@@ -229,13 +222,12 @@
 <script type="module">
     import { GoogleGenerativeAI } from "@google/generative-ai";
 
-    // 🔴 [보안] 3분할 키 (수정 금지)
-    const KEY_PART_1 = "AIzaSyAq7G2mE2qFuUi";
-    const KEY_PART_2 = "f-";
-    const KEY_PART_3 = "PgPDsXl1ppbY5_JK54";
-    const API_KEY = KEY_PART_1 + KEY_PART_2 + KEY_PART_3;
+    // 🔴 [보안] Basic Code에 있던 키를 그대로 사용합니다.
+    const p1 = "AIzaSyAq7G2mE2qFuUi";
+    const p2 = "f-";
+    const p3 = "PgPDsXl1ppbY5_JK54";
+    const API_KEY = p1 + p2 + p3;
 
-    // AI 이미지 분석 함수 (미리보기 + 분석)
     window.handleImageUpload = async function(inputElement, index) {
         const file = inputElement.files[0];
         if (!file) return;
@@ -250,12 +242,13 @@
         }
         reader.readAsDataURL(file);
 
-        // 2. AI 분석 시작 (로딩 표시)
+        // 2. AI 분석 시작
         const loadingOverlay = document.getElementById(`loading_${index}`);
         loadingOverlay.style.display = 'flex';
 
         try {
             const genAI = new GoogleGenerativeAI(API_KEY);
+            // Flash 모델 사용
             const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
             
             const imagePart = await fileToGenerativePart(file);
@@ -264,19 +257,19 @@
                 당신은 창호 견적 전문가입니다. 이 사진을 분석하여 JSON 형식으로만 답하세요.
                 
                 1. 창호 종류 판단 (typeCode):
-                   - "S_BAL": 발코니용 단창(외부와 맞닿은 난간이 있는 창)
-                   - "S_IN": 내부용 단창(방 안쪽 창)
-                   - "D_IN": 내부용 이중창(창문이 두 겹)
-                   - "D_EXT": 확장형 이중창(두꺼운 프레임)
+                   - "S_BAL": 발코니용 단창(난간 있음)
+                   - "S_IN": 내부용 단창
+                   - "D_IN": 내부용 이중창
+                   - "D_EXT": 확장형 이중창
                    - "SYS": 시스템창/터닝도어
                    - "PJ": 프로젝트창
-                   (불확실하면 S_IN 으로 추정)
+                   (불확실하면 S_IN)
 
                 2. 사이즈 측정 (width, height):
-                   - 사진 속에 A4용지(210x297mm)를 찾아서 그것을 기준으로 창틀 전체(프레임 포함) 크기를 mm 단위로 계산하세요.
-                   - A4용지가 안 보이면 일반적인 아파트 창문 규격을 참고하여 추정하세요. (예: 거실 3000x2300)
+                   - A4용지(210x297mm)가 보이면 비율 계산.
+                   - 없으면 일반적 규격 추정.
                 
-                3. 응답 형식 (오직 JSON만):
+                3. 응답 형식 (JSON):
                 {
                     "typeCode": "문자열",
                     "width": 숫자,
@@ -289,17 +282,17 @@
             const text = response.text().replace(/```json|```/g, "").trim();
             const data = JSON.parse(text);
 
-            // 데이터 자동 입력
             if(data.typeCode) document.getElementById(`type_${index}`).value = data.typeCode;
             if(data.width) document.getElementById(`w_${index}`).value = data.width;
             if(data.height) document.getElementById(`h_${index}`).value = data.height;
 
-            // 완료 알림 대신 살짝 진동이나 콘솔 로그 (사용자 경험 위해)
-            console.log("AI 분석 완료:", data);
+            // 성공 시 별도 알림 없이 값만 채움 (사용성 증대)
+            console.log("AI 분석 성공:", data);
 
         } catch (error) {
             console.error(error);
-            alert("AI 분석에 실패했습니다. 직접 입력해주세요.");
+            // 🔴 [수정] 여기가 중요합니다. 구체적인 에러 메시지를 띄웁니다.
+            alert("⚠️ AI 분석 오류 발생:\n" + error.message + "\n\n(직접 치수를 입력해주세요)");
         } finally {
             loadingOverlay.style.display = 'none';
         }
@@ -321,7 +314,7 @@
         });
     }
 
-    // 주소 찾기 및 기타 기능 (window 객체에 할당)
+    // 주소 찾기 및 저장 기능
     window.openAddressSearch = function() {
         new daum.Postcode({
             oncomplete: function(data) {
@@ -348,7 +341,7 @@
         });
     }
 
-    // 초기화 및 UI 생성
+    // UI 생성
     const locations = ["거실", "안방", "침실1", "침실2", "침실3", "주방", "발코니1", "발코니2", "터닝도어"];
     const inputArea = document.getElementById('inputListArea');
     const windowOptions = `
@@ -365,9 +358,8 @@
             <div class="input-card">
                 <div id="loading_${index}" class="ai-loading">
                     <div class="spinner"></div>
-                    <span>AI 측정중...</span>
+                    <span>AI 분석중...</span>
                 </div>
-
                 <div class="photo-area">
                     <div id="defaultIcon_${index}" class="default-icon-wrap">
                         <div class="camera-circle"><i>📷</i></div>
@@ -377,7 +369,6 @@
                     <img id="previewImg_${index}" class="photo-preview">
                     <input type="file" accept="image/*" class="photo-input-hidden" onchange="handleImageUpload(this, ${index})">
                 </div>
-
                 <div class="dim-area">
                     <div class="row-title">NO.${index + 1} &nbsp;${loc}</div>
                     <div class="form-row">
@@ -397,7 +388,7 @@
         inputArea.innerHTML += html;
     });
 
-    // 계산 로직 (기존 유지)
+    // 계산 로직 (유지)
     const companyDB = {
         'A사': { name: 'A사 (표준)', specs: { 'S_IN': 13000, 'S_BAL': 14000, 'D_IN': 20000, 'D_EXT': 24000, 'SYS': 14000, 'PJ': 15000 } },
         'B사': { name: 'B사 (알뜰)', specs: { 'S_IN': 12500, 'S_BAL': 13500, 'D_IN': 19500, 'D_EXT': 23500, 'SYS': 13500, 'PJ': 14500 } },
@@ -470,19 +461,3 @@
                 </div>
             `;
             const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = html;
-            graphContainer.appendChild(tempDiv.querySelector('.graph-row'));
-            
-            setTimeout(() => {
-                const bars = graphContainer.querySelectorAll('.g-bar');
-                bars[idx].style.width = percent + '%';
-                if(idx === 0) bars[idx].classList.add('best');
-                else if(idx === 1) bars[idx].classList.add('second');
-            }, 100);
-        });
-
-        resultSection.scrollIntoView({ behavior: 'smooth' });
-    }
-</script>
-</body>
-</html>
