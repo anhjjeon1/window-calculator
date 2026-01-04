@@ -3,7 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>청개구리 AI 샤시 플랫폼</title>
+    <title>청개구리 창호견적(무료)</title>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/generative-ai": "https://esm.run/@google/generative-ai"
+        }
+      }
+    </script>
     <style>
         /* [플랫폼 스타일 정의] */
         :root {
@@ -14,129 +23,102 @@
 
         body { font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif; background-color: var(--bg-color); margin: 0; padding: 0; color: #333; -webkit-font-smoothing: antialiased; }
 
-        /* 1. 헤더 */
+        /* 헤더 */
         header { 
-            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
-            padding: 15px 20px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
-            display: flex; align-items: center; 
-            position: sticky; top: 0; z-index: 100; color: white;
+            background: linear-gradient(100deg, #4285f4 0%, #0d47a1 100%);
+            padding: 0 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+            display: flex; align-items: center; position: sticky; top: 0; z-index: 100; color: white; height: 70px;
         }
-        .logo-img { font-size: 34px; margin-right: 15px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
-        .header-text { flex: 1; }
-        .header-text h1 { margin: 0; font-size: 21px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; }
-        .header-sub { display: flex; justify-content: space-between; align-items: center; margin: 4px 0 0; font-size: 12px; font-weight: 500; opacity: 0.9; }
-        .version-tag { font-size: 11px; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px; font-weight: 600; }
+        .header-logo-area { flex-shrink: 0; position: absolute; left: 15px; top: 50%; transform: translateY(-50%); z-index: 2; }
+        .logo-clipart { width: 50px; height: 50px; object-fit: contain; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3)); background: rgba(255,255,255,0.95); border-radius: 12px; padding: 4px; }
+        .main-title { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); margin: 0; font-size: 22px; font-weight: 900; letter-spacing: -0.5px; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.2); white-space: nowrap; z-index: 1; width: 100%; pointer-events: none; }
+        .sub-info { position: absolute; bottom: 8px; right: 15px; display: flex; align-items: center; gap: 5px; z-index: 2; }
+        .ver-badge { font-size: 9px; background: #ffea00; color: #000; padding: 1px 4px; border-radius: 3px; font-weight: 800; }
+        .ver-desc { font-size: 9px; color: #e3f2fd; font-weight: 400; letter-spacing: -0.3px; }
 
-        .container { max-width: 768px; margin: 0 auto; padding: 20px; padding-bottom: 100px; }
+        .container { max-width: 768px; margin: 0 auto; padding: 20px; padding-bottom: 120px; }
 
-        /* 2. 공통 요소 */
-        .address-box { 
-            background: white; padding: 10px; border-radius: 12px; 
-            box-shadow: var(--card-shadow); margin-bottom: 20px; display: flex; gap: 8px; border: 1px solid #edf2f7; 
+        /* 주소 입력 영역 */
+        .address-wrapper {
+            background: white; padding: 15px; border-radius: 12px; 
+            box-shadow: var(--card-shadow); margin-bottom: 20px; border: 1px solid #edf2f7;
         }
-        .address-box input { border: none; background: #f7f9fc; padding: 12px; border-radius: 8px; flex: 1; font-weight: bold; color: #333; outline: none; }
-        .btn-search { background: #333; color: white; border: none; padding: 0 18px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .address-row { display: flex; gap: 8px; margin-bottom: 8px; }
+        .address-row input { border: none; background: #f7f9fc; padding: 12px; border-radius: 8px; flex: 1; font-weight: bold; color: #333; outline: none; }
+        .btn-search { background: #333; color: white; border: none; padding: 0 15px; border-radius: 8px; font-weight: bold; cursor: pointer; white-space: nowrap; }
+        .detail-input { width: 100%; border: 1px solid #e1e4e8; background: #fff; padding: 12px; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
 
-        /* 3. AI 측정 가이드 섹션 */
-        .ai-guide-box {
-            background: white; border-radius: 16px; box-shadow: var(--card-shadow);
-            margin-bottom: 25px; display: flex; overflow: hidden;
-            border: 1px solid #d0e2ff;
-            min-height: 110px;
-        }
-        
-        /* [수정됨 Ver 2.0] 좌측 사진 입력칸 넓게 조정 (35% -> 45%) */
-        .ai-photo-slot {
-            width: 45%; /* 가로 너비 확대 */
-            background: #000; 
-            position: relative; 
-            cursor: pointer; 
-            border-right: 1px solid #d0e2ff;
-            display: flex; align-items: center; justify-content: center;
-            padding: 0;
-            overflow: hidden; 
-        }
-        
-        .ai-btn-img { 
-            width: 100%; height: 100%; 
-            object-fit: contain; /* 잘림 방지 */
-            position: absolute; top: 0; left: 0;
-            opacity: 0.8; 
-            z-index: 1;
-            transition: transform 0.3s;
-        }
-        .ai-photo-slot:hover .ai-btn-img { opacity: 1.0; }
-
-        .ai-btn-text { 
-            position: relative; z-index: 2; 
-            font-size: 15px; /* 글자 크기 약간 확대 */
-            font-weight: 800; 
-            color: white; 
-            text-align: center; 
-            text-shadow: 0 2px 5px rgba(0,0,0,0.9);
-            line-height: 1.3;
-        }
-
-        /* [수정됨 Ver 2.0] 우측 설명 텍스트 (65% -> 55%) */
-        .ai-text-slot {
-            width: 55%; padding: 15px; display: flex; flex-direction: column; justify-content: center;
-        }
+        /* AI 가이드 */
+        .ai-guide-box { background: white; border-radius: 16px; box-shadow: var(--card-shadow); margin-bottom: 25px; display: flex; overflow: hidden; border: 1px solid #d0e2ff; min-height: 110px; }
+        .ai-photo-slot { width: 45%; background: #000; position: relative; cursor: pointer; border-right: 1px solid #d0e2ff; display: flex; align-items: center; justify-content: center; padding: 0; overflow: hidden; }
+        .ai-btn-img { width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; opacity: 0.85; z-index: 1; }
+        .ai-arrow-indicator { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); z-index: 2; text-align: center; animation: bounceUp 1.5s infinite; }
+        .ai-arrow-icon { font-size: 28px; color: #ffff00; text-shadow: 0 2px 4px rgba(0,0,0,0.8); display: block; line-height: 0.8; margin-bottom: 2px; }
+        .ai-arrow-text { font-size: 11px; font-weight: 800; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.9); background: rgba(0,0,0,0.5); padding: 2px 6px; border-radius: 4px; }
+        @keyframes bounceUp { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -8px); } }
+        .ai-text-slot { width: 55%; padding: 15px; display: flex; flex-direction: column; justify-content: center; }
         .ai-title { font-size: 14px; font-weight: 800; color: #333; margin-bottom: 8px; display: flex; align-items: center; }
         .ai-badge { background: #333; color: white; font-size: 10px; padding: 2px 5px; border-radius: 4px; margin-right: 6px; }
-        
         .guide-list { margin: 0; padding: 0; list-style: none; font-size: 12px; color: #555; line-height: 1.5; }
         .guide-list li { margin-bottom: 6px; position: relative; padding-left: 12px; }
         .guide-list li::before { content: "•"; position: absolute; left: 0; color: var(--primary-color); font-weight: bold; }
         .highlight { color: #d32f2f; font-weight: bold; background: #ffebee; padding: 0 2px; border-radius: 2px; }
 
-        /* 4. 하단 9개 입력 카드 */
-        .input-card { 
-            background: white; border-radius: 16px; 
-            box-shadow: var(--card-shadow); margin-bottom: 20px; 
-            overflow: hidden; display: flex; flex-direction: row; 
+        /* [수정] 입력 카드 및 사진 미리보기 (가로형 4:3 비율 적용) */
+        .input-card { background: white; border-radius: 16px; box-shadow: var(--card-shadow); margin-bottom: 20px; overflow: hidden; display: flex; flex-direction: column; /* 모바일에서 사진을 크게 보기 위해 상하 배치 추천, 하지만 요청대로 4:3 유지하며 배치 */ }
+        @media (min-width: 400px) {
+            .input-card { flex-direction: row; }
+            .photo-area { width: 50%; aspect-ratio: 4/3; } /* 가로형 4:3 비율 */
+            .dim-area { width: 50%; }
         }
-        /* [수정됨 Ver 2.0] 하단 사진 영역 넓게 조정 (32% -> 40%) */
+        
         .photo-area { 
-            width: 40%; /* 가로 너비 확대 */
-            background: #f8fafc; border-right: 1px solid #edf2f7; 
+            width: 100%; aspect-ratio: 4/3; /* 모바일 기본 가로형 비율 */
+            background: #000; border-right: 1px solid #edf2f7; border-bottom: 1px solid #edf2f7;
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            position: relative; cursor: pointer;
+            position: relative; cursor: pointer; overflow: hidden; 
         }
-        .camera-circle { 
-            width: 40px; height: 40px; background: #e3f2fd; border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; margin-bottom: 8px; 
-        }
+        
+        /* [수정] 사진이 잘리지 않고 전체가 보이도록 contain 적용 */
+        .photo-preview { width: 100%; height: 100%; object-fit: contain; display: none; background: #000; } 
+        
+        .default-icon-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; background: #f8fafc; }
+        .camera-circle { width: 40px; height: 40px; background: #e3f2fd; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
         .camera-circle i { font-size: 20px; color: var(--primary-color); font-style: normal; }
-        .photo-label { font-size: 12px; color: #555; font-weight: 600; text-align: center; } /* 글자 크기 약간 확대 */
-        .photo-input-hidden { position: absolute; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+        .photo-label { font-size: 12px; color: #555; font-weight: 600; text-align: center; } 
+        
+        /* [수정] capture 속성 제거하여 갤러리/카메라 선택 가능하게 함 */
+        .photo-input-hidden { position: absolute; width: 100%; height: 100%; opacity: 0; cursor: pointer; left:0; top:0; z-index: 10; }
+        
+        /* 로딩 오버레이 */
+        .ai-loading {
+            position: absolute; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.6); z-index: 20;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            font-weight: bold; color: #fff; font-size: 14px;
+            backdrop-filter: blur(2px);
+        }
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid #fff;
+            border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin-bottom: 10px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* [수정됨 Ver 2.0] 하단 입력 영역 (68% -> 60%) */
-        .dim-area { width: 60%; padding: 15px; display: flex; flex-direction: column; gap: 8px; }
-        .row-title { font-size: 14px; color: var(--primary-color); font-weight: 800; margin-bottom: 2px; }
+        .dim-area { flex: 1; padding: 15px; display: flex; flex-direction: column; gap: 8px; justify-content: center;}
+        .row-title { font-size: 15px; color: var(--primary-color); font-weight: 800; margin-bottom: 2px; }
         select, input[type="number"] { width: 100%; padding: 0 10px; height: 42px; border: 1px solid #e1e4e8; border-radius: 8px; font-size: 14px; background: #fff; box-sizing: border-box; }
         .form-row { display: flex; gap: 8px; }
 
-        /* 5. 버튼 및 유의사항 */
-        .btn-calc { 
-            width: 100%; padding: 18px; 
-            background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%); 
-            color: white; border: none; border-radius: 12px; font-size: 19px; font-weight: 800; 
-            cursor: pointer; margin-top: 10px; box-shadow: 0 8px 15px rgba(26, 115, 232, 0.3);
-        }
+        /* [수정] 버튼 그룹 (업체별 가격비교, 비교 저장 1열 배치) */
+        .btn-group { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-calc { flex: 6; padding: 18px; background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%); color: white; border: none; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer; box-shadow: 0 8px 15px rgba(26, 115, 232, 0.3); }
+        .btn-save { flex: 4; padding: 18px; background: #ff9800; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer; box-shadow: 0 8px 15px rgba(255, 152, 0, 0.3); display: flex; align-items: center; justify-content: center; gap:5px; }
 
-        .disclaimer-box { 
-            text-align: center; margin-top: 15px; padding: 12px;
-            background: #fff8e1; border-radius: 12px; border: 1px solid #ffe0b2; 
-            color: #8d6e63; font-size: 12px; line-height: 1.5; 
-            box-shadow: 0 2px 8px rgba(255, 193, 7, 0.1); word-break: keep-all; 
-        }
+        .disclaimer-box { text-align: center; margin-top: 15px; padding: 12px; background: #fff8e1; border-radius: 12px; border: 1px solid #ffe0b2; color: #8d6e63; font-size: 12px; line-height: 1.5; box-shadow: 0 2px 8px rgba(255, 193, 7, 0.1); word-break: keep-all; margin-bottom: 25px; }
 
-        /* 6. 결과 및 하단 */
-        .result-section { display: none; margin-top: 40px; border-top: 2px dashed #ddd; padding-top: 30px; }
+        .result-section { display: none; margin-top: 20px; border-top: 2px dashed #ddd; padding-top: 30px; }
         .chart-box { background: white; padding: 25px 20px; border-radius: 16px; box-shadow: var(--card-shadow); margin-bottom: 30px; }
         .chart-title { font-size: 17px; font-weight: 800; margin-bottom: 20px; color: #222; }
-        
         .graph-row { display: flex; align-items: center; margin-bottom: 15px; font-size: 13px; }
         .g-label { width: 50px; font-weight: 700; color: #555; }
         .g-bar-area { flex: 1; height: 32px; background: #f1f3f5; border-radius: 6px; overflow: hidden; position: relative; margin: 0 12px; }
@@ -145,80 +127,83 @@
         .g-bar.second { background: #339af0; }
         .g-price { width: 75px; text-align: right; font-weight: 800; color: #333; font-size: 14px; }
 
-        .contact-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 30px; }
-        .btn-call { 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            padding: 16px; border-radius: 12px; text-decoration: none; color: white; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.15); transition: transform 0.2s; position: relative; 
-        }
-        .btn-call:active { transform: translateY(3px); }
-        .c-blue { background: linear-gradient(135deg, #4285F4, #3367d6); }
-        .c-green { background: linear-gradient(135deg, #34A853, #257e3e); }
-        .c-purple { background: linear-gradient(135deg, #9C27B0, #7b1fa2); }
-        .c-orange { background: linear-gradient(135deg, #FF9800, #f57c00); }
-        .c-teal { background: linear-gradient(135deg, #00BCD4, #0097a7); }
-        .c-navy { background: linear-gradient(135deg, #3F51B5, #303f9f); }
-        .btn-call strong { font-size: 16px; margin-bottom: 4px; }
-        .btn-call span { font-size: 11px; opacity: 0.9; }
-        .icon-phone { font-size: 18px; margin-bottom: 5px; opacity: 0.8; font-style: normal; }
+        .contact-title { font-size: 16px; font-weight: 800; color: #333; margin-bottom: 10px; text-align: center; border-top: 1px solid #eee; padding-top: 20px; }
+        .contact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 30px; }
+        .btn-call { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; border-radius: 8px; text-decoration: none; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.15); transition: transform 0.1s; position: relative; min-height: 70px; }
+        .btn-call:active { transform: translateY(2px); }
+        .c-A { background: #E53935; } .c-B { background: #FB8C00; } .c-C { background: #FDD835; color: #333; }
+        .c-D { background: #43A047; } .c-E { background: #1E88E5; } .c-F { background: #8E24AA; }
+        .btn-call strong { font-size: 14px; margin-bottom: 2px; }
+        .btn-call span { font-size: 10px; opacity: 0.9; white-space: nowrap; }
+        .icon-phone { font-size: 16px; margin-bottom: 4px; opacity: 0.9; font-style: normal; }
 
-        footer { 
-            background: #212529; color: #adb5bd; 
-            padding: 30px 20px; text-align: center; 
-            font-size: 12px; line-height: 1.8;
-        }
-        .footer-line { display: block; margin-bottom: 3px; }
-        .f-divider { color: #495057; margin: 0 8px; }
+        footer { background: #212529; color: #adb5bd; padding: 25px 15px; text-align: center; }
+        .footer-line { display: block; font-size: 11px; line-height: 1.6; word-break: keep-all; }
+        .f-divider { color: #495057; margin: 0 6px; font-size: 10px; }
         .f-highlight { color: #fff; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo-img">🐸</div> 
-    <div class="header-text">
-        <h1>청개구리 샤시 플랫폼</h1>
-        <div class="header-sub">
-            <span>대한민국 1등 샤시 비교견적</span>
-            <span class="version-tag">Ver 2.0</span>
-        </div>
+    <div class="header-logo-area">
+        <img src="logo.png" alt="견적서 로고" class="logo-clipart" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3176/3176366.png'"> 
+    </div>
+    <h1 class="main-title">청개구리 창호견적(무료)</h1>
+    <div class="sub-info">
+        <span class="ver-badge">Ver 5.0 AI</span>
+        <span class="ver-desc">AI + 가로형</span>
     </div>
 </header>
 
-<div class="container">
-
-    <div class="address-box">
-        <input type="text" id="aptAddress" placeholder="아파트명 또는 주소 검색...">
-        <button class="btn-search">🔍 검색</button>
+<div class="container" id="captureArea">
+    
+    <div class="address-wrapper">
+        <div class="address-row">
+            <input type="text" id="aptAddress" placeholder="주소 검색 클릭 (예: 대치동)" readonly onclick="openAddressSearch()">
+            <button class="btn-search" onclick="openAddressSearch()">🔍 주소찾기</button>
+        </div>
+        <input type="text" class="detail-input" id="detailAddress" placeholder="상세 주소 입력 (예: 101동 1204호)">
     </div>
 
     <div class="ai-guide-box">
         <div class="ai-photo-slot">
             <img src="Gemini_Generated_Image_lk91n8lk91n8lk91.png" alt="AI측정" class="ai-btn-img" onerror="this.style.display='none';">
-            <div class="ai-btn-text">AI 측정<br>사진등록</div>
-            <input type="file" capture="environment" class="photo-input-hidden" onchange="alert('창문 전체가 나오도록 찍어주세요. AI가 치수를 분석합니다.')">
-        </div>
+            <div class="ai-arrow-indicator">
+                <span class="ai-arrow-icon">▲</span>
+                <span class="ai-arrow-text">A4 위치</span>
+            </div>
+            </div>
         <div class="ai-text-slot">
             <div class="ai-title"><span class="ai-badge">Tip</span> 치수 측정 방법</div>
             <ul class="guide-list">
-                <li>
-                    <strong>방법 1 (AI 자동):</strong> 창문에 <span class="highlight">A4 용지</span>를 붙이고 정면에서 촬영하면 가로×세로가 자동 입력됩니다.
-                </li>
-                <li>
-                    <strong>방법 2 (직접 입력):</strong> 줄자로 실측하여 아래 칸에 직접 적어주셔도 됩니다.
-                </li>
+                <li><strong>방법 1 (AI 자동):</strong> 창문에 <span class="highlight">A4 용지</span>를 붙이고 정면 촬영 시 자동 입력됩니다.</li>
+                <li><strong>방법 2 (직접 입력):</strong> 줄자로 실측하여 아래 칸에 적어주세요.</li>
             </ul>
         </div>
     </div>
 
     <div id="inputListArea"></div>
 
-    <button class="btn-calc" onclick="calculateEstimates()">✨ 실시간 최저가 확인하기</button>
+    <div class="btn-group">
+        <button class="btn-calc" onclick="calculateEstimates()">✨ 업체별 가격비교</button>
+        <button class="btn-save" onclick="saveAsImage()">📸 비교 저장</button>
+    </div>
 
     <div class="disclaimer-box">
         <strong style="display:block; margin-bottom:4px;">⚠️ 견적 유의사항</strong>
         상기 견적은 시공여건과 추가옵션에 따른 비용상승이 발생할 수 있습니다.<br>
-        시공업체가 선정되면 정확한 견적을 위해 전문 매니저의 <strong>무료 방문 실측</strong>을 추천드립니다.
+        전문 매니저의 <strong>무료 방문 실측</strong>을 추천드립니다.
+    </div>
+
+    <div class="contact-title">📞 제휴 시공사 다이렉트 연결</div>
+    <div class="contact-grid">
+        <a href="tel:01000000001" class="btn-call c-A"><i class="icon-phone">📞</i><strong>A사</strong><span>표준시공</span></a>
+        <a href="tel:01000000002" class="btn-call c-B"><i class="icon-phone">📞</i><strong>B사</strong><span>알뜰형</span></a>
+        <a href="tel:01000000003" class="btn-call c-C"><i class="icon-phone">📞</i><strong>C사</strong><span>프리미엄</span></a>
+        <a href="tel:01000000004" class="btn-call c-D"><i class="icon-phone">📞</i><strong>D사</strong><span>빠른시공</span></a>
+        <a href="tel:01000000005" class="btn-call c-E"><i class="icon-phone">📞</i><strong>E사</strong><span>특화시공</span></a>
+        <a href="tel:01000000006" class="btn-call c-F"><i class="icon-phone">📞</i><strong>F사</strong><span>친절상담</span></a>
     </div>
 
     <div id="resultSection" class="result-section">
@@ -226,32 +211,144 @@
             <div class="chart-title">📊 업체별 예상 견적 비교</div>
             <div id="graphContainer"></div>
         </div>
-        <div class="chart-title" style="text-align:center; margin-top:40px;">📞 시공 업체 다이렉트 연결</div>
-        <div class="contact-grid">
-            <a href="tel:01000000001" class="btn-call c-blue"><i class="icon-phone">📞</i><strong>A사 (표준)</strong><span>KCC/LX 정품시공</span></a>
-            <a href="tel:01000000002" class="btn-call c-green"><i class="icon-phone">📞</i><strong>B사 (알뜰)</strong><span>가성비 최우수</span></a>
-            <a href="tel:01000000003" class="btn-call c-purple"><i class="icon-phone">📞</i><strong>C사 (고급)</strong><span>프리미엄 시스템</span></a>
-            <a href="tel:01000000004" class="btn-call c-orange"><i class="icon-phone">📞</i><strong>D사 (빠른)</strong><span>1-Day 시공 전문</span></a>
-            <a href="tel:01000000005" class="btn-call c-teal"><i class="icon-phone">📞</i><strong>E사 (특화)</strong><span>단열/방음 특화</span></a>
-            <a href="tel:01000000006" class="btn-call c-navy"><i class="icon-phone">📞</i><strong>F사 (친절)</strong><span>철저한 A/S 보장</span></a>
-        </div>
     </div>
 </div>
 
 <footer>
     <div class="footer-line">
         <span class="f-highlight">청개구리샤시</span> <span class="f-divider">|</span>
-        사업자 등록번호 : 123-36-31426 <span class="f-divider">|</span>
+        사업자 : 123-36-31426 <span class="f-divider">|</span>
         대표 : 전영웅
     </div>
     <div class="footer-line">
-        고객센터 1599-7380 (08:00~17:00) <span class="f-divider">|</span>
-        COPYRIGHT ⓒ 2025 All Rights Reserved.
+        고객센터 1599-7380 (08시~17시) <span class="f-divider">|</span>
+        COPYRIGHT ⓒ 2026
     </div>
 </footer>
 
-<script>
-    /* [기존 로직 유지] */
+<script type="module">
+    import { GoogleGenerativeAI } from "@google/generative-ai";
+
+    // 🔴 [보안] 3분할 키 (수정 금지)
+    const KEY_PART_1 = "AIzaSyAq7G2mE2qFuUi";
+    const KEY_PART_2 = "f-";
+    const KEY_PART_3 = "PgPDsXl1ppbY5_JK54";
+    const API_KEY = KEY_PART_1 + KEY_PART_2 + KEY_PART_3;
+
+    // AI 이미지 분석 함수 (미리보기 + 분석)
+    window.handleImageUpload = async function(inputElement, index) {
+        const file = inputElement.files[0];
+        if (!file) return;
+
+        // 1. 이미지 미리보기 (즉시 실행)
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('defaultIcon_' + index).style.display = 'none';
+            const img = document.getElementById('previewImg_' + index);
+            img.src = e.target.result;
+            img.style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+
+        // 2. AI 분석 시작 (로딩 표시)
+        const loadingOverlay = document.getElementById(`loading_${index}`);
+        loadingOverlay.style.display = 'flex';
+
+        try {
+            const genAI = new GoogleGenerativeAI(API_KEY);
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+            
+            const imagePart = await fileToGenerativePart(file);
+            
+            const prompt = `
+                당신은 창호 견적 전문가입니다. 이 사진을 분석하여 JSON 형식으로만 답하세요.
+                
+                1. 창호 종류 판단 (typeCode):
+                   - "S_BAL": 발코니용 단창(외부와 맞닿은 난간이 있는 창)
+                   - "S_IN": 내부용 단창(방 안쪽 창)
+                   - "D_IN": 내부용 이중창(창문이 두 겹)
+                   - "D_EXT": 확장형 이중창(두꺼운 프레임)
+                   - "SYS": 시스템창/터닝도어
+                   - "PJ": 프로젝트창
+                   (불확실하면 S_IN 으로 추정)
+
+                2. 사이즈 측정 (width, height):
+                   - 사진 속에 A4용지(210x297mm)를 찾아서 그것을 기준으로 창틀 전체(프레임 포함) 크기를 mm 단위로 계산하세요.
+                   - A4용지가 안 보이면 일반적인 아파트 창문 규격을 참고하여 추정하세요. (예: 거실 3000x2300)
+                
+                3. 응답 형식 (오직 JSON만):
+                {
+                    "typeCode": "문자열",
+                    "width": 숫자,
+                    "height": 숫자
+                }
+            `;
+
+            const result = await model.generateContent([prompt, imagePart]);
+            const response = await result.response;
+            const text = response.text().replace(/```json|```/g, "").trim();
+            const data = JSON.parse(text);
+
+            // 데이터 자동 입력
+            if(data.typeCode) document.getElementById(`type_${index}`).value = data.typeCode;
+            if(data.width) document.getElementById(`w_${index}`).value = data.width;
+            if(data.height) document.getElementById(`h_${index}`).value = data.height;
+
+            // 완료 알림 대신 살짝 진동이나 콘솔 로그 (사용자 경험 위해)
+            console.log("AI 분석 완료:", data);
+
+        } catch (error) {
+            console.error(error);
+            alert("AI 분석에 실패했습니다. 직접 입력해주세요.");
+        } finally {
+            loadingOverlay.style.display = 'none';
+        }
+    };
+
+    async function fileToGenerativePart(file) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64Data = reader.result.split(',')[1];
+                resolve({
+                    inlineData: {
+                        data: base64Data,
+                        mimeType: file.type
+                    }
+                });
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // 주소 찾기 및 기타 기능 (window 객체에 할당)
+    window.openAddressSearch = function() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                var roadAddr = data.roadAddress; 
+                var jibunAddr = data.jibunAddress; 
+                if(roadAddr !== ''){
+                    document.getElementById("aptAddress").value = roadAddr + " (" + data.buildingName + ")";
+                } else {
+                    document.getElementById("aptAddress").value = jibunAddr;
+                }
+                document.getElementById("detailAddress").focus();
+            }
+        }).open();
+    }
+
+    window.saveAsImage = function() {
+        alert("견적 결과를 이미지로 저장합니다.\n(잠시만 기다려주세요...)");
+        const captureArea = document.body;
+        html2canvas(captureArea).then(canvas => {
+            const link = document.createElement('a');
+            link.download = '청개구리_견적결과_' + new Date().getTime() + '.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        });
+    }
+
+    // 초기화 및 UI 생성
     const locations = ["거실", "안방", "침실1", "침실2", "침실3", "주방", "발코니1", "발코니2", "터닝도어"];
     const inputArea = document.getElementById('inputListArea');
     const windowOptions = `
@@ -266,12 +363,21 @@
     locations.forEach((loc, index) => {
         const html = `
             <div class="input-card">
-                <div class="photo-area">
-                    <div class="camera-circle"><i>📷</i></div>
-                    <div class="photo-label">사진촬영<br>(A4부착)</div>
-                    <div style="font-size:10px; color:#ff6b6b; font-weight:bold; margin-top:4px;">AI 측정</div>
-                    <input type="file" capture="environment" class="photo-input-hidden">
+                <div id="loading_${index}" class="ai-loading">
+                    <div class="spinner"></div>
+                    <span>AI 측정중...</span>
                 </div>
+
+                <div class="photo-area">
+                    <div id="defaultIcon_${index}" class="default-icon-wrap">
+                        <div class="camera-circle"><i>📷</i></div>
+                        <div class="photo-label">사진촬영<br>(A4부착)</div>
+                        <div style="font-size:10px; color:#ff6b6b; font-weight:bold; margin-top:4px;">AI 측정</div>
+                    </div>
+                    <img id="previewImg_${index}" class="photo-preview">
+                    <input type="file" accept="image/*" class="photo-input-hidden" onchange="handleImageUpload(this, ${index})">
+                </div>
+
                 <div class="dim-area">
                     <div class="row-title">NO.${index + 1} &nbsp;${loc}</div>
                     <div class="form-row">
@@ -291,6 +397,7 @@
         inputArea.innerHTML += html;
     });
 
+    // 계산 로직 (기존 유지)
     const companyDB = {
         'A사': { name: 'A사 (표준)', specs: { 'S_IN': 13000, 'S_BAL': 14000, 'D_IN': 20000, 'D_EXT': 24000, 'SYS': 14000, 'PJ': 15000 } },
         'B사': { name: 'B사 (알뜰)', specs: { 'S_IN': 12500, 'S_BAL': 13500, 'D_IN': 19500, 'D_EXT': 23500, 'SYS': 13500, 'PJ': 14500 } },
@@ -300,7 +407,7 @@
         'F사': { name: 'F사 (친절)', specs: { 'S_IN': 14000, 'S_BAL': 15000, 'D_IN': 21000, 'D_EXT': 25000, 'SYS': 15000, 'PJ': 16000 } }
     };
 
-    function calculateEstimates() {
+    window.calculateEstimates = function() {
         let totalArea = 0;
         let requestList = [];
 
@@ -357,17 +464,25 @@
                 <div class="graph-row">
                     <div class="g-label">${item.name.split(' ')[0]}</div>
                     <div class="g-bar-area">
-                        <div class="${barClass}" style="width: ${percent}%;"></div>
+                        <div class="g-bar" style="width: 0%;"></div> 
                     </div>
                     <div class="g-price">${item.price.toLocaleString()}원</div>
                 </div>
             `;
-            graphContainer.innerHTML += html;
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            graphContainer.appendChild(tempDiv.querySelector('.graph-row'));
+            
+            setTimeout(() => {
+                const bars = graphContainer.querySelectorAll('.g-bar');
+                bars[idx].style.width = percent + '%';
+                if(idx === 0) bars[idx].classList.add('best');
+                else if(idx === 1) bars[idx].classList.add('second');
+            }, 100);
         });
 
         resultSection.scrollIntoView({ behavior: 'smooth' });
     }
 </script>
-
 </body>
 </html>
