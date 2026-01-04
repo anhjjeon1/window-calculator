@@ -19,17 +19,27 @@
         :root { --primary-color: #1a73e8; --bg-color: #f0f4f8; --card-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         body { font-family: 'Pretendard', sans-serif; background-color: var(--bg-color); margin: 0; padding: 0; color: #333; -webkit-font-smoothing: antialiased; }
 
-        /* 헤더 (상단 고정) */
+        /* [수정] 헤더 스타일: 중앙 정렬 및 배지 우측 고정 */
         header { 
             background: linear-gradient(100deg, #4285f4 0%, #0d47a1 100%); 
-            padding: 0 15px; height: 60px; display: flex; align-items: center; 
+            padding: 0 15px; height: 60px; display: flex; align-items: center; justify-content: center;
             position: fixed; top: 0; left: 0; width: 100%; z-index: 100; 
             color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); box-sizing: border-box; 
         }
-        .logo-clipart { width: 40px; height: 40px; background: rgba(255,255,255,0.95); border-radius: 8px; padding: 2px; margin-right: 10px; }
-        .header-content { flex: 1; }
-        .main-title { margin: 0; font-size: 18px; font-weight: 800; }
-        .ver-badge { font-size: 10px; background: #00C73C; color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+        /* 로고: 절대 위치로 좌측 고정 */
+        .logo-clipart { 
+            width: 40px; height: 40px; background: rgba(255,255,255,0.95); border-radius: 8px; padding: 2px; 
+            position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+        }
+        /* 제목: 중앙 정렬 및 크기 확대 */
+        .main-title { 
+            margin: 0; font-size: 20px; font-weight: 900; text-align: center; letter-spacing: -0.5px;
+        }
+        /* 배지: 절대 위치로 우측 고정 */
+        .ver-badge { 
+            font-size: 10px; background: #00e676; color: #000; padding: 3px 6px; border-radius: 4px; font-weight: 800; 
+            position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+        }
 
         .container { max-width: 768px; margin: 0 auto; padding: 15px; padding-top: 75px; padding-bottom: 100px; }
 
@@ -40,7 +50,6 @@
         .btn-search { background: #333; color: white; border: none; padding: 0 12px; border-radius: 6px; font-weight: bold; cursor: pointer; }
         .detail-input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; margin-bottom: 8px;}
         
-        /* [NEW] 자동 검색 버튼 스타일 */
         .btn-auto-search { 
             width: 100%; background: linear-gradient(90deg, #03C75A 0%, #008f40 100%); 
             color: white; border: none; padding: 12px; border-radius: 8px; 
@@ -50,12 +59,10 @@
         }
         .btn-auto-search:active { transform: scale(0.98); }
 
-        /* 대체 사이트 링크 영역 */
         .alt-links { display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap; justify-content: center; }
         .alt-btn { font-size: 11px; padding: 6px 10px; border: 1px solid #ddd; background: #f8f9fa; border-radius: 15px; text-decoration: none; color: #555; display: flex; align-items: center; gap: 4px; }
         .alt-btn:hover { background: #e3f2fd; color: var(--primary-color); border-color: var(--primary-color); }
 
-        /* 도면 표시창 */
         .blueprint-display-area { 
             margin-top: 15px; border: 2px dashed #cfd8dc; border-radius: 12px; 
             min-height: 180px; background: #fafafa; position: relative; 
@@ -66,7 +73,6 @@
         .bp-img { width: 100%; height: 100%; object-fit: contain; position: absolute; top:0; left:0; display: none; }
         .bp-file-input { position: absolute; width: 100%; height: 100%; top:0; left:0; opacity: 0; cursor: pointer; }
         
-        /* 도면 없음 버튼 */
         .btn-no-blueprint { 
             display: block; width: 100%; text-align: center; margin-top: 8px; 
             font-size: 12px; color: #d32f2f; text-decoration: underline; cursor: pointer; 
@@ -87,7 +93,6 @@
         select, input[type="number"] { width: 100%; height: 32px; border: 1px solid #ddd; border-radius: 5px; font-size: 13px; padding-left: 5px; box-sizing: border-box; background: #fff; }
         .size-inputs { display: flex; gap: 5px; }
 
-        /* 로딩 */
         .loading-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 10; display: none; flex-direction: column; justify-content: center; align-items: center; }
         .spinner { width: 20px; height: 20px; border: 3px solid #ddd; border-top: 3px solid var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -98,7 +103,19 @@
         .btn-calc { background: var(--primary-color); }
         .btn-save { background: #ff9800; }
 
-        .chart-box { background: white; padding: 15px; border-radius: 12px; margin-top: 20px; display: none; }
+        /* [수정] 결과창: 처음에도 보이게 처리 및 플레이스홀더 텍스트 */
+        .chart-box { 
+            background: white; padding: 15px; border-radius: 12px; margin-top: 20px; 
+            box-shadow: var(--card-shadow); 
+            min-height: 100px;
+            display: flex; flex-direction: column; justify-content: center; /* 내용 중앙 정렬 */
+        }
+        /* 결과창 초기 텍스트 */
+        .chart-placeholder-text {
+            text-align: center; color: #bdbdbd; font-size: 16px; font-weight: 800;
+            padding: 30px 0;
+        }
+
         .graph-row { display: flex; align-items: center; margin-bottom: 10px; font-size: 12px; }
         .g-label { width: 40px; font-weight: bold; }
         .g-bar-bg { flex: 1; height: 20px; background: #f0f0f0; margin: 0 10px; border-radius: 4px; overflow: hidden; }
@@ -112,13 +129,9 @@
 <body>
 
 <header>
-    <div style="display:flex; align-items:center; width:100%;">
-        <img src="logo.png" class="logo-clipart" onerror="this.style.background='#eee'">
-        <div class="header-content">
-            <h1 class="main-title">청개구리 창호견적</h1>
-            <span class="ver-badge">Ver 11.0 Auto Search</span>
-        </div>
-    </div>
+    <img src="logo.png" class="logo-clipart" onerror="this.style.background='#eee'">
+    <h1 class="main-title">청개구리 창호견적</h1>
+    <span class="ver-badge">Ver 11.1 UI Fix</span>
 </header>
 
 <div class="container" id="captureArea">
@@ -162,7 +175,7 @@
     </div>
 
     <div class="chart-box" id="resultSection">
-        <h3 style="margin:0 0 15px 0; text-align:center;">📊 업체별 예상 견적</h3>
+        <div id="resultPlaceholder" class="chart-placeholder-text">업체별 견적 비교</div>
         <div id="graphContainer"></div>
     </div>
 </div>
@@ -175,7 +188,6 @@
 <script>
     let globalBlueprintFile = null;
 
-    // 1. 주소 찾기
     function openAddressSearch() {
         new daum.Postcode({
             oncomplete: function(data) {
@@ -186,18 +198,13 @@
         }).open();
     }
 
-    // 2. [핵심] 자동 도면 검색 로직
     function autoSearchBlueprint() {
         const addr = document.getElementById("aptAddress").value;
         if (!addr) {
             alert("먼저 주소를 검색해주세요!");
             return;
         }
-        
-        // 검색어 정제 (괄호 제거 등)
         const query = addr.split("(")[0].trim(); 
-        
-        // 1순위: 네이버 부동산 (가장 데이터가 많음)
         const naverUrl = `https://m.land.naver.com/search/result/${encodeURIComponent(query)}`;
         
         if(confirm(`'${query}' 도면을 자동으로 검색합니다.\n\n1. 새 창에서 '평면도'를 확인하세요.\n2. 화면을 캡처하세요.\n3. 앱으로 돌아와 '도면이 보이는 칸'에 등록하세요.`)) {
@@ -205,12 +212,10 @@
         }
     }
 
-    // 3. [요청사항] 검색 실패 시 알림
     function alertNoBlueprint() {
         alert("🚨 자동검색이 안되니 AI실측을 활용하거나 직접 실측의 방법을 적용하셔야 합니다.");
     }
 
-    // 4. 도면 업로드 및 표시
     function handleBlueprintUpload(input) {
         if (input.files && input.files[0]) {
             globalBlueprintFile = input.files[0];
@@ -226,7 +231,6 @@
         }
     }
 
-    // UI 생성 및 기능
     const locations = ["거실", "안방", "침실1", "침실2", "침실3", "주방", "발코니1", "발코니2", "터닝도어"];
     const inputArea = document.getElementById('inputListArea');
     const windowOptions = `
@@ -268,8 +272,8 @@
         inputArea.innerHTML += html;
     });
 
-    // 견적 계산
     const companyDB = { 'A사': 100, 'B사': 90, 'C사': 120, 'D사': 95, 'E사': 105, 'F사': 110 };
+    
     function calculateEstimates() {
         let totalPyeong = 0;
         let hasData = false;
@@ -282,8 +286,11 @@
 
         const resultBox = document.getElementById('resultSection');
         const container = document.getElementById('graphContainer');
-        resultBox.style.display = 'block';
-        container.innerHTML = '';
+        
+        // [수정] 견적 산출 시 플레이스홀더(회색글씨) 숨기기
+        document.getElementById('resultPlaceholder').style.display = 'none';
+        
+        container.innerHTML = `<h3 style="margin:0 0 15px 0; text-align:center; font-size:17px; font-weight:800; color:#222;">📊 업체별 예상 견적</h3>`;
 
         let results = [];
         for (const [name, rate] of Object.entries(companyDB)) {
@@ -352,7 +359,6 @@
             let prompt = "";
 
             if (window.globalBlueprintFile) {
-                // 도면 포함 분석
                 const blueprintPart = await fileToGenerativePart(window.globalBlueprintFile);
                 parts.push(blueprintPart);
                 prompt = `
@@ -363,7 +369,6 @@
                     거실은 전체 벽면 너비를 계산하세요.
                 `;
             } else {
-                // 사진 단독 분석
                 prompt = `
                     당신은 창호 견적 전문가입니다.
                     사진 속 **${locationName}** 창문의 전체 틀 크기(가로x세로)를 A4용지(210x297mm) 기준으로 계산하세요.
