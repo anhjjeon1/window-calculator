@@ -6,6 +6,7 @@
     <title>청개구리 창호견적(무료)</title>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    
     <script type="importmap">
       {
         "imports": {
@@ -13,22 +14,14 @@
         }
       }
     </script>
-    <style>
-        /* [플랫폼 스타일 정의 - Basic Code 기반 + AI 기능] */
-        :root {
-            --primary-color: #1a73e8;
-            --bg-color: #f0f4f8;
-            --card-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
 
+    <style>
+        /* [스타일 정의] */
+        :root { --primary-color: #1a73e8; --bg-color: #f0f4f8; --card-shadow: 0 4px 20px rgba(0,0,0,0.08); }
         body { font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif; background-color: var(--bg-color); margin: 0; padding: 0; color: #333; -webkit-font-smoothing: antialiased; }
 
         /* 헤더 */
-        header { 
-            background: linear-gradient(100deg, #4285f4 0%, #0d47a1 100%);
-            padding: 0 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
-            display: flex; align-items: center; position: sticky; top: 0; z-index: 100; color: white; height: 70px;
-        }
+        header { background: linear-gradient(100deg, #4285f4 0%, #0d47a1 100%); padding: 0 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; position: sticky; top: 0; z-index: 100; color: white; height: 70px; }
         .header-logo-area { flex-shrink: 0; position: absolute; left: 15px; top: 50%; transform: translateY(-50%); z-index: 2; }
         .logo-clipart { width: 50px; height: 50px; object-fit: contain; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3)); background: rgba(255,255,255,0.95); border-radius: 12px; padding: 4px; }
         .main-title { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); margin: 0; font-size: 22px; font-weight: 900; letter-spacing: -0.5px; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.2); white-space: nowrap; z-index: 1; width: 100%; pointer-events: none; }
@@ -38,17 +31,14 @@
 
         .container { max-width: 768px; margin: 0 auto; padding: 20px; padding-bottom: 120px; }
 
-        /* 주소 입력 영역 */
-        .address-wrapper {
-            background: white; padding: 15px; border-radius: 12px; 
-            box-shadow: var(--card-shadow); margin-bottom: 20px; border: 1px solid #edf2f7;
-        }
+        /* 주소창 */
+        .address-wrapper { background: white; padding: 15px; border-radius: 12px; box-shadow: var(--card-shadow); margin-bottom: 20px; border: 1px solid #edf2f7; }
         .address-row { display: flex; gap: 8px; margin-bottom: 8px; }
         .address-row input { border: none; background: #f7f9fc; padding: 12px; border-radius: 8px; flex: 1; font-weight: bold; color: #333; outline: none; }
         .btn-search { background: #333; color: white; border: none; padding: 0 15px; border-radius: 8px; font-weight: bold; cursor: pointer; white-space: nowrap; }
         .detail-input { width: 100%; border: 1px solid #e1e4e8; background: #fff; padding: 12px; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
 
-        /* AI 가이드 */
+        /* 가이드 박스 */
         .ai-guide-box { background: white; border-radius: 16px; box-shadow: var(--card-shadow); margin-bottom: 25px; display: flex; overflow: hidden; border: 1px solid #d0e2ff; min-height: 110px; }
         .ai-photo-slot { width: 45%; background: #000; position: relative; cursor: pointer; border-right: 1px solid #d0e2ff; display: flex; align-items: center; justify-content: center; padding: 0; overflow: hidden; }
         .ai-btn-img { width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; opacity: 0.85; z-index: 1; }
@@ -64,37 +54,21 @@
         .guide-list li::before { content: "•"; position: absolute; left: 0; color: var(--primary-color); font-weight: bold; }
         .highlight { color: #d32f2f; font-weight: bold; background: #ffebee; padding: 0 2px; border-radius: 2px; }
 
-        /* 입력 카드 (가로형 4:3) */
+        /* 입력 카드 (가로형 4:3 복원) */
         .input-card { background: white; border-radius: 16px; box-shadow: var(--card-shadow); margin-bottom: 20px; overflow: hidden; display: flex; flex-direction: column; }
         @media (min-width: 400px) { .input-card { flex-direction: row; } .photo-area { width: 50%; aspect-ratio: 4/3; } .dim-area { width: 50%; } }
         
-        .photo-area { 
-            width: 100%; aspect-ratio: 4/3; 
-            background: #000; border-right: 1px solid #edf2f7; border-bottom: 1px solid #edf2f7;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            position: relative; cursor: pointer; overflow: hidden; 
-        }
+        .photo-area { width: 100%; aspect-ratio: 4/3; background: #000; border-right: 1px solid #edf2f7; border-bottom: 1px solid #edf2f7; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; cursor: pointer; overflow: hidden; }
         .photo-preview { width: 100%; height: 100%; object-fit: contain; display: none; background: #000; } 
-        
         .default-icon-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; background: #f8fafc; }
         .camera-circle { width: 40px; height: 40px; background: #e3f2fd; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
         .camera-circle i { font-size: 20px; color: var(--primary-color); font-style: normal; }
         .photo-label { font-size: 12px; color: #555; font-weight: 600; text-align: center; } 
-        
         .photo-input-hidden { position: absolute; width: 100%; height: 100%; opacity: 0; cursor: pointer; left:0; top:0; z-index: 10; }
         
-        /* 로딩 오버레이 */
-        .ai-loading {
-            position: absolute; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.6); z-index: 20;
-            display: none; flex-direction: column; justify-content: center; align-items: center;
-            font-weight: bold; color: #fff; font-size: 14px;
-            backdrop-filter: blur(2px);
-        }
-        .spinner {
-            border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid #fff;
-            border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin-bottom: 10px;
-        }
+        /* 로딩 UI */
+        .ai-loading { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); z-index: 20; display: none; flex-direction: column; justify-content: center; align-items: center; font-weight: bold; color: #fff; font-size: 14px; backdrop-filter: blur(2px); }
+        .spinner { border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid #fff; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin-bottom: 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         .dim-area { flex: 1; padding: 15px; display: flex; flex-direction: column; gap: 8px; justify-content: center;}
@@ -144,8 +118,8 @@
     </div>
     <h1 class="main-title">청개구리 창호견적(무료)</h1>
     <div class="sub-info">
-        <span class="ver-badge">Ver 5.1 AI-Debug</span>
-        <span class="ver-desc">에러상세확인</span>
+        <span class="ver-badge">Ver 5.2</span>
+        <span class="ver-desc">입력창 복원</span>
     </div>
 </header>
 
@@ -219,103 +193,9 @@
     </div>
 </footer>
 
-<script type="module">
-    import { GoogleGenerativeAI } from "@google/generative-ai";
-
-    // 🔴 [보안] Basic Code에 있던 키를 그대로 사용합니다.
-    const p1 = "AIzaSyAq7G2mE2qFuUi";
-    const p2 = "f-";
-    const p3 = "PgPDsXl1ppbY5_JK54";
-    const API_KEY = p1 + p2 + p3;
-
-    window.handleImageUpload = async function(inputElement, index) {
-        const file = inputElement.files[0];
-        if (!file) return;
-
-        // 1. 이미지 미리보기 (즉시 실행)
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('defaultIcon_' + index).style.display = 'none';
-            const img = document.getElementById('previewImg_' + index);
-            img.src = e.target.result;
-            img.style.display = 'block';
-        }
-        reader.readAsDataURL(file);
-
-        // 2. AI 분석 시작
-        const loadingOverlay = document.getElementById(`loading_${index}`);
-        loadingOverlay.style.display = 'flex';
-
-        try {
-            const genAI = new GoogleGenerativeAI(API_KEY);
-            // Flash 모델 사용
-            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-            
-            const imagePart = await fileToGenerativePart(file);
-            
-            const prompt = `
-                당신은 창호 견적 전문가입니다. 이 사진을 분석하여 JSON 형식으로만 답하세요.
-                
-                1. 창호 종류 판단 (typeCode):
-                   - "S_BAL": 발코니용 단창(난간 있음)
-                   - "S_IN": 내부용 단창
-                   - "D_IN": 내부용 이중창
-                   - "D_EXT": 확장형 이중창
-                   - "SYS": 시스템창/터닝도어
-                   - "PJ": 프로젝트창
-                   (불확실하면 S_IN)
-
-                2. 사이즈 측정 (width, height):
-                   - A4용지(210x297mm)가 보이면 비율 계산.
-                   - 없으면 일반적 규격 추정.
-                
-                3. 응답 형식 (JSON):
-                {
-                    "typeCode": "문자열",
-                    "width": 숫자,
-                    "height": 숫자
-                }
-            `;
-
-            const result = await model.generateContent([prompt, imagePart]);
-            const response = await result.response;
-            const text = response.text().replace(/```json|```/g, "").trim();
-            const data = JSON.parse(text);
-
-            if(data.typeCode) document.getElementById(`type_${index}`).value = data.typeCode;
-            if(data.width) document.getElementById(`w_${index}`).value = data.width;
-            if(data.height) document.getElementById(`h_${index}`).value = data.height;
-
-            // 성공 시 별도 알림 없이 값만 채움 (사용성 증대)
-            console.log("AI 분석 성공:", data);
-
-        } catch (error) {
-            console.error(error);
-            // 🔴 [수정] 여기가 중요합니다. 구체적인 에러 메시지를 띄웁니다.
-            alert("⚠️ AI 분석 오류 발생:\n" + error.message + "\n\n(직접 치수를 입력해주세요)");
-        } finally {
-            loadingOverlay.style.display = 'none';
-        }
-    };
-
-    async function fileToGenerativePart(file) {
-        return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const base64Data = reader.result.split(',')[1];
-                resolve({
-                    inlineData: {
-                        data: base64Data,
-                        mimeType: file.type
-                    }
-                });
-            };
-            reader.readAsDataURL(file);
-        });
-    }
-
-    // 주소 찾기 및 저장 기능
-    window.openAddressSearch = function() {
+<script>
+    // 주소찾기
+    function openAddressSearch() {
         new daum.Postcode({
             oncomplete: function(data) {
                 var roadAddr = data.roadAddress; 
@@ -330,7 +210,8 @@
         }).open();
     }
 
-    window.saveAsImage = function() {
+    // 결과 저장
+    function saveAsImage() {
         alert("견적 결과를 이미지로 저장합니다.\n(잠시만 기다려주세요...)");
         const captureArea = document.body;
         html2canvas(captureArea).then(canvas => {
@@ -341,7 +222,7 @@
         });
     }
 
-    // UI 생성
+    // 입력 카드 생성 (NO.1 ~ NO.9) - 여기가 핵심 복원 파트
     const locations = ["거실", "안방", "침실1", "침실2", "침실3", "주방", "발코니1", "발코니2", "터닝도어"];
     const inputArea = document.getElementById('inputListArea');
     const windowOptions = `
@@ -353,6 +234,7 @@
         <option value="PJ">PJ창 / 프로젝트창</option>
     `;
 
+    // 카드를 그립니다 (가로형 4:3 비율, 사진 미리보기 기능 포함)
     locations.forEach((loc, index) => {
         const html = `
             <div class="input-card">
@@ -360,6 +242,7 @@
                     <div class="spinner"></div>
                     <span>AI 분석중...</span>
                 </div>
+
                 <div class="photo-area">
                     <div id="defaultIcon_${index}" class="default-icon-wrap">
                         <div class="camera-circle"><i>📷</i></div>
@@ -367,8 +250,9 @@
                         <div style="font-size:10px; color:#ff6b6b; font-weight:bold; margin-top:4px;">AI 측정</div>
                     </div>
                     <img id="previewImg_${index}" class="photo-preview">
-                    <input type="file" accept="image/*" class="photo-input-hidden" onchange="handleImageUpload(this, ${index})">
+                    <input type="file" accept="image/*" class="photo-input-hidden" onchange="window.handleImageUpload(this, ${index})">
                 </div>
+
                 <div class="dim-area">
                     <div class="row-title">NO.${index + 1} &nbsp;${loc}</div>
                     <div class="form-row">
@@ -388,7 +272,7 @@
         inputArea.innerHTML += html;
     });
 
-    // 계산 로직 (유지)
+    // 가격 계산 로직
     const companyDB = {
         'A사': { name: 'A사 (표준)', specs: { 'S_IN': 13000, 'S_BAL': 14000, 'D_IN': 20000, 'D_EXT': 24000, 'SYS': 14000, 'PJ': 15000 } },
         'B사': { name: 'B사 (알뜰)', specs: { 'S_IN': 12500, 'S_BAL': 13500, 'D_IN': 19500, 'D_EXT': 23500, 'SYS': 13500, 'PJ': 14500 } },
@@ -398,7 +282,7 @@
         'F사': { name: 'F사 (친절)', specs: { 'S_IN': 14000, 'S_BAL': 15000, 'D_IN': 21000, 'D_EXT': 25000, 'SYS': 15000, 'PJ': 16000 } }
     };
 
-    window.calculateEstimates = function() {
+    function calculateEstimates() {
         let totalArea = 0;
         let requestList = [];
 
@@ -461,3 +345,117 @@
                 </div>
             `;
             const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            graphContainer.appendChild(tempDiv.querySelector('.graph-row'));
+            
+            setTimeout(() => {
+                const bars = graphContainer.querySelectorAll('.g-bar');
+                bars[idx].style.width = percent + '%';
+                if(idx === 0) bars[idx].classList.add('best');
+                else if(idx === 1) bars[idx].classList.add('second');
+            }, 100);
+        });
+
+        resultSection.scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+
+<script type="module">
+    import { GoogleGenerativeAI } from "@google/generative-ai";
+
+    // 🔴 [API 키] 사용자님이 제공해주신 기본 키 사용
+    const p1 = "AIzaSyAq7G2mE2qFuUi";
+    const p2 = "f-";
+    const p3 = "PgPDsXl1ppbY5_JK54";
+    const API_KEY = p1 + p2 + p3;
+
+    // 전역 함수로 등록하여 HTML에서 호출 가능하게 함
+    window.handleImageUpload = async function(inputElement, index) {
+        const file = inputElement.files[0];
+        if (!file) return;
+
+        // 1. 이미지 미리보기 (즉시 실행)
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('defaultIcon_' + index).style.display = 'none';
+            const img = document.getElementById('previewImg_' + index);
+            img.src = e.target.result;
+            img.style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+
+        // 2. AI 분석 시작 (로딩바 표시)
+        const loadingOverlay = document.getElementById(`loading_${index}`);
+        if(loadingOverlay) loadingOverlay.style.display = 'flex';
+
+        try {
+            const genAI = new GoogleGenerativeAI(API_KEY);
+            // gemini-1.5-flash 모델 사용
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+            
+            const imagePart = await fileToGenerativePart(file);
+            
+            const prompt = `
+                당신은 창호 견적 전문가입니다. 이 사진을 분석하여 JSON 형식으로만 답하세요.
+                
+                1. 창호 종류 판단 (typeCode):
+                   - "S_BAL": 발코니용 단창(외부와 맞닿은 난간이 있는 창)
+                   - "S_IN": 내부용 단창(방 안쪽 창)
+                   - "D_IN": 내부용 이중창(창문이 두 겹)
+                   - "D_EXT": 확장형 이중창(두꺼운 프레임)
+                   - "SYS": 시스템창/터닝도어
+                   - "PJ": 프로젝트창
+                   (불확실하면 S_IN 으로 추정)
+
+                2. 사이즈 측정 (width, height):
+                   - 사진 속에 A4용지(210x297mm)를 찾아서 그것을 기준으로 창틀 전체(프레임 포함) 크기를 mm 단위로 계산하세요.
+                   - A4용지가 안 보이면 일반적인 아파트 창문 규격을 참고하여 추정하세요. (예: 거실 3000x2300)
+                
+                3. 응답 형식 (오직 JSON만):
+                {
+                    "typeCode": "문자열",
+                    "width": 숫자,
+                    "height": 숫자
+                }
+            `;
+
+            const result = await model.generateContent([prompt, imagePart]);
+            const response = await result.response;
+            const text = response.text().replace(/```json|```/g, "").trim();
+            const data = JSON.parse(text);
+
+            // 데이터 자동 입력
+            if(data.typeCode) document.getElementById(`type_${index}`).value = data.typeCode;
+            if(data.width) document.getElementById(`w_${index}`).value = data.width;
+            if(data.height) document.getElementById(`h_${index}`).value = data.height;
+
+            console.log("AI 분석 성공:", data);
+
+        } catch (error) {
+            console.error(error);
+            // 에러 발생 시 상세 원인 출력 (400, 403 등)
+            alert("⚠️ AI 분석 오류 발생:\n" + error.message + "\n\n(직접 치수를 입력해주세요)");
+        } finally {
+            if(loadingOverlay) loadingOverlay.style.display = 'none';
+        }
+    };
+
+    async function fileToGenerativePart(file) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64Data = reader.result.split(',')[1];
+                resolve({
+                    inlineData: {
+                        data: base64Data,
+                        mimeType: file.type
+                    }
+                });
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+</script>
+
+</body>
+</html>
