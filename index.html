@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>청개구리 창호견적(무료)</title>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
         /* [플랫폼 스타일 정의] */
         :root {
@@ -30,7 +31,7 @@
 
         .container { max-width: 768px; margin: 0 auto; padding: 20px; padding-bottom: 120px; }
 
-        /* [수정됨] 주소 입력 영역 스타일 */
+        /* 주소 입력 영역 */
         .address-wrapper {
             background: white; padding: 15px; border-radius: 12px; 
             box-shadow: var(--card-shadow); margin-bottom: 20px; border: 1px solid #edf2f7;
@@ -58,23 +59,41 @@
 
         /* 입력 카드 */
         .input-card { background: white; border-radius: 16px; box-shadow: var(--card-shadow); margin-bottom: 20px; overflow: hidden; display: flex; flex-direction: row; }
-        .photo-area { width: 40%; background: #f8fafc; border-right: 1px solid #edf2f7; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; cursor: pointer; overflow: hidden; }
         
-        /* [수정됨] 사진 미리보기 관련 스타일 */
-        .photo-preview { width: 100%; height: 100%; object-fit: cover; display: none; } /* 처음엔 숨김 */
-        .default-icon-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; }
-
+        /* [수정됨 1] 사진 영역 넓히고 (45%) 배경을 검정색으로 처리 */
+        .photo-area { 
+            width: 45%; 
+            background: #000; /* 검은 배경 */
+            border-right: 1px solid #edf2f7; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            position: relative; cursor: pointer; overflow: hidden; 
+        }
+        
+        /* [수정됨 2] 이미지가 짤리지 않고 전체가 다 보이도록 contain 적용 */
+        .photo-preview { 
+            width: 100%; height: 100%; 
+            object-fit: contain; /* 중요: 사진 전체 다 보여주기 */
+            display: none; 
+        } 
+        
+        .default-icon-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; background: #f8fafc; }
         .camera-circle { width: 40px; height: 40px; background: #e3f2fd; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
         .camera-circle i { font-size: 20px; color: var(--primary-color); font-style: normal; }
         .photo-label { font-size: 12px; color: #555; font-weight: 600; text-align: center; } 
         .photo-input-hidden { position: absolute; width: 100%; height: 100%; opacity: 0; cursor: pointer; left:0; top:0; z-index: 10; }
         
-        .dim-area { width: 60%; padding: 15px; display: flex; flex-direction: column; gap: 8px; }
+        /* [수정됨] 입력칸 영역 조금 줄임 (55%) */
+        .dim-area { width: 55%; padding: 12px; display: flex; flex-direction: column; gap: 8px; justify-content: center;}
+        
         .row-title { font-size: 14px; color: var(--primary-color); font-weight: 800; margin-bottom: 2px; }
         select, input[type="number"] { width: 100%; padding: 0 10px; height: 42px; border: 1px solid #e1e4e8; border-radius: 8px; font-size: 14px; background: #fff; box-sizing: border-box; }
         .form-row { display: flex; gap: 8px; }
 
-        .btn-calc { width: 100%; padding: 18px; background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%); color: white; border: none; border-radius: 12px; font-size: 19px; font-weight: 800; cursor: pointer; margin-top: 10px; box-shadow: 0 8px 15px rgba(26, 115, 232, 0.3); }
+        /* [수정됨] 버튼 그룹 (가로 배치) */
+        .btn-group { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-calc { flex: 2; padding: 18px; background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%); color: white; border: none; border-radius: 12px; font-size: 18px; font-weight: 800; cursor: pointer; box-shadow: 0 8px 15px rgba(26, 115, 232, 0.3); }
+        .btn-save { flex: 1; padding: 18px; background: #ff9800; color: white; border: none; border-radius: 12px; font-size: 14px; font-weight: 800; cursor: pointer; box-shadow: 0 8px 15px rgba(255, 152, 0, 0.3); display: flex; align-items: center; justify-content: center; gap:5px; }
+
         .disclaimer-box { text-align: center; margin-top: 15px; padding: 12px; background: #fff8e1; border-radius: 12px; border: 1px solid #ffe0b2; color: #8d6e63; font-size: 12px; line-height: 1.5; box-shadow: 0 2px 8px rgba(255, 193, 7, 0.1); word-break: keep-all; margin-bottom: 25px; }
 
         .result-section { display: none; margin-top: 20px; border-top: 2px dashed #ddd; padding-top: 30px; }
@@ -112,12 +131,12 @@
     </div>
     <h1 class="main-title">청개구리 창호견적(무료)</h1>
     <div class="sub-info">
-        <span class="ver-badge">Ver 3.9</span>
-        <span class="ver-desc">상세주소 & 사진저장</span>
+        <span class="ver-badge">Ver 4.0</span>
+        <span class="ver-desc">사진비율 및 저장기능</span>
     </div>
 </header>
 
-<div class="container">
+<div class="container" id="captureArea">
     
     <div class="address-wrapper">
         <div class="address-row">
@@ -147,7 +166,10 @@
 
     <div id="inputListArea"></div>
 
-    <button class="btn-calc" onclick="calculateEstimates()">✨ 실시간 최저가 확인하기</button>
+    <div class="btn-group">
+        <button class="btn-calc" onclick="calculateEstimates()">✨ 최저가 확인</button>
+        <button class="btn-save" onclick="saveAsImage()">📸 이미지 저장</button>
+    </div>
 
     <div class="disclaimer-box">
         <strong style="display:block; margin-bottom:4px;">⚠️ 견적 유의사항</strong>
@@ -186,12 +208,10 @@
 </footer>
 
 <script>
-    // [보안 업데이트] 키 분할 합체 기술 적용
     const p1 = "AIzaSyAq7G2mE2qFuUi";
     const p2 = "f-";
     const p3 = "PgPDsXl1ppbY5_JK54";
     const myRealKey = p1 + p2 + p3;
-
     const apiKeys = [myRealKey, myRealKey, myRealKey];
 
     function getActiveApiKey() {
@@ -210,18 +230,16 @@
                 } else {
                     document.getElementById("aptAddress").value = jibunAddr;
                 }
-                // 주소 검색 후 상세주소 칸으로 자동 포커스 이동
                 document.getElementById("detailAddress").focus();
             }
         }).open();
     }
 
-    /* [추가됨] 사진 선택 시 미리보기 보여주는 함수 */
+    /* 사진 미리보기 기능 */
     function showPreview(input, index) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
             reader.onload = function(e) {
-                // 아이콘 숨기고 이미지 보여주기
                 document.getElementById('defaultIcon_' + index).style.display = 'none';
                 var img = document.getElementById('previewImg_' + index);
                 img.src = e.target.result;
@@ -229,6 +247,22 @@
             }
             reader.readAsDataURL(input.files[0]);
         }
+    }
+
+    /* [추가됨] 화면 캡처 및 저장 기능 */
+    function saveAsImage() {
+        alert("견적 화면을 이미지로 저장합니다.\n(잠시만 기다려주세요...)");
+        
+        // 캡처할 영역 선택 (container 전체)
+        const captureArea = document.body;
+
+        html2canvas(captureArea).then(canvas => {
+            // 이미지로 변환
+            const link = document.createElement('a');
+            link.download = '청개구리_창호견적_' + new Date().getTime() + '.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        });
     }
 
     const locations = ["거실", "안방", "침실1", "침실2", "침실3", "주방", "발코니1", "발코니2", "터닝도어"];
@@ -252,7 +286,6 @@
                         <div style="font-size:10px; color:#ff6b6b; font-weight:bold; margin-top:4px;">AI 측정</div>
                     </div>
                     <img id="previewImg_${index}" class="photo-preview">
-                    
                     <input type="file" accept="image/*" class="photo-input-hidden" onchange="showPreview(this, ${index})">
                 </div>
                 <div class="dim-area">
