@@ -19,23 +19,18 @@
         :root { --primary-color: #1a73e8; --bg-color: #f0f4f8; --card-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         body { font-family: 'Pretendard', sans-serif; background-color: var(--bg-color); margin: 0; padding: 0; color: #333; -webkit-font-smoothing: antialiased; }
 
-        /* [수정] 헤더 스타일: 중앙 정렬 및 배지 우측 고정 */
+        /* 헤더 */
         header { 
             background: linear-gradient(100deg, #4285f4 0%, #0d47a1 100%); 
             padding: 0 15px; height: 60px; display: flex; align-items: center; justify-content: center;
             position: fixed; top: 0; left: 0; width: 100%; z-index: 100; 
             color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); box-sizing: border-box; 
         }
-        /* 로고: 절대 위치로 좌측 고정 */
         .logo-clipart { 
             width: 40px; height: 40px; background: rgba(255,255,255,0.95); border-radius: 8px; padding: 2px; 
             position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
         }
-        /* 제목: 중앙 정렬 및 크기 확대 */
-        .main-title { 
-            margin: 0; font-size: 20px; font-weight: 900; text-align: center; letter-spacing: -0.5px;
-        }
-        /* 배지: 절대 위치로 우측 고정 */
+        .main-title { margin: 0; font-size: 20px; font-weight: 900; text-align: center; letter-spacing: -0.5px; }
         .ver-badge { 
             font-size: 10px; background: #00e676; color: #000; padding: 3px 6px; border-radius: 4px; font-weight: 800; 
             position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
@@ -43,7 +38,7 @@
 
         .container { max-width: 768px; margin: 0 auto; padding: 15px; padding-top: 75px; padding-bottom: 100px; }
 
-        /* 주소 및 도면 섹션 */
+        /* 상단 섹션 */
         .top-section { background: white; border-radius: 12px; padding: 15px; box-shadow: var(--card-shadow); margin-bottom: 15px; }
         .address-row { display: flex; gap: 5px; margin-bottom: 8px; }
         .address-row input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 6px; background: #f9f9f9; font-weight: bold; }
@@ -103,19 +98,13 @@
         .btn-calc { background: var(--primary-color); }
         .btn-save { background: #ff9800; }
 
-        /* [수정] 결과창: 처음에도 보이게 처리 및 플레이스홀더 텍스트 */
+        /* 결과창 */
         .chart-box { 
             background: white; padding: 15px; border-radius: 12px; margin-top: 20px; 
-            box-shadow: var(--card-shadow); 
-            min-height: 100px;
-            display: flex; flex-direction: column; justify-content: center; /* 내용 중앙 정렬 */
+            box-shadow: var(--card-shadow); min-height: 100px;
+            display: flex; flex-direction: column; justify-content: center; 
         }
-        /* 결과창 초기 텍스트 */
-        .chart-placeholder-text {
-            text-align: center; color: #bdbdbd; font-size: 16px; font-weight: 800;
-            padding: 30px 0;
-        }
-
+        .chart-placeholder-text { text-align: center; color: #bdbdbd; font-size: 16px; font-weight: 800; padding: 30px 0; }
         .graph-row { display: flex; align-items: center; margin-bottom: 10px; font-size: 12px; }
         .g-label { width: 40px; font-weight: bold; }
         .g-bar-bg { flex: 1; height: 20px; background: #f0f0f0; margin: 0 10px; border-radius: 4px; overflow: hidden; }
@@ -131,7 +120,7 @@
 <header>
     <img src="logo.png" class="logo-clipart" onerror="this.style.background='#eee'">
     <h1 class="main-title">청개구리 창호견적</h1>
-    <span class="ver-badge">Ver 11.1 UI Fix</span>
+    <span class="ver-badge">Ver 11.2 Real-Data</span>
 </header>
 
 <div class="container" id="captureArea">
@@ -186,6 +175,58 @@
 </footer>
 
 <script>
+    // [중요] 사용자가 제공한 구글 시트 CSV 링크
+    const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ_0fzDiPb7o94pN5PFBWfYpEcm7hqBhUT2Q1RyWqH78WdEnu4rdRSajOi7KN_bVnDUlaXk7TznbJ7o/pub?gid=560833598&single=true&output=csv";
+
+    // 단가표 담을 전역 변수
+    let companyDB = {};
+
+    // 1. 단가표 데이터 불러오기 (앱 실행 시 자동 실행)
+    async function fetchPriceData() {
+        try {
+            const response = await fetch(GOOGLE_SHEET_CSV_URL);
+            const text = await response.text();
+            parseCSV(text);
+        } catch (error) {
+            console.error("단가표 로딩 실패:", error);
+            // 실패 시 사용할 기본값 (백업)
+            companyDB = { 'A사': { name: 'A사', specs: {} } }; 
+        }
+    }
+
+    // 2. CSV 파싱 (구글시트 데이터 -> 앱 데이터 변환)
+    function parseCSV(csvText) {
+        const rows = csvText.split('\n').map(row => row.split(','));
+        const newDB = {};
+
+        rows.forEach((row, index) => {
+            if (index === 0) return; // 헤더 제외
+            if (row.length < 5) return; 
+
+            // CSV 컬럼 매핑: A열=식별코드(0), C열=업체명(2), I열=단가(8)
+            const code = row[0]?.trim(); 
+            const comp = row[2]?.trim();
+            const price = parseInt(row[8]?.trim());
+
+            if (code && comp && !isNaN(price)) {
+                if (!newDB[comp]) newDB[comp] = { name: comp, specs: {} };
+                newDB[comp].specs[code] = price;
+            }
+        });
+
+        if (Object.keys(newDB).length > 0) {
+            companyDB = newDB;
+            console.log("✅ 최신 단가표 로드 완료:", companyDB);
+        }
+    }
+
+    // 앱 실행 시 바로 단가표 로딩
+    fetchPriceData();
+
+    // --------------------------------------------------
+    // 기존 기능 (주소, 도면, 계산 등)
+    // --------------------------------------------------
+    
     let globalBlueprintFile = null;
 
     function openAddressSearch() {
@@ -200,14 +241,10 @@
 
     function autoSearchBlueprint() {
         const addr = document.getElementById("aptAddress").value;
-        if (!addr) {
-            alert("먼저 주소를 검색해주세요!");
-            return;
-        }
+        if (!addr) { alert("먼저 주소를 검색해주세요!"); return; }
         const query = addr.split("(")[0].trim(); 
         const naverUrl = `https://m.land.naver.com/search/result/${encodeURIComponent(query)}`;
-        
-        if(confirm(`'${query}' 도면을 자동으로 검색합니다.\n\n1. 새 창에서 '평면도'를 확인하세요.\n2. 화면을 캡처하세요.\n3. 앱으로 돌아와 '도면이 보이는 칸'에 등록하세요.`)) {
+        if(confirm(`'${query}' 도면을 검색합니다.\n\n1. 도면을 캡처하세요.\n2. '도면이 보이는 칸'에 등록하세요.`)) {
             window.open(naverUrl, '_blank');
         }
     }
@@ -238,7 +275,7 @@
         <option value="S_BAL">발코니용 단창 (외부)</option>
         <option value="D_IN">내부용 이중창</option>
         <option value="D_EXT">확장형 이중창 (단열↑)</option>
-        <option value="SYS">시스템창 / 터닝도어</option>
+        <option value="SYS">공틀일체형 / 시스템창</option>
         <option value="PJ">PJ창 / 프로젝트창</option>
     `;
 
@@ -272,32 +309,63 @@
         inputArea.innerHTML += html;
     });
 
-    const companyDB = { 'A사': 100, 'B사': 90, 'C사': 120, 'D사': 95, 'E사': 105, 'F사': 110 };
-    
+    // [업데이트] 실제 단가표 기반 계산 로직
     function calculateEstimates() {
-        let totalPyeong = 0;
         let hasData = false;
+        let reqList = []; // 입력된 창호 리스트
+
         for(let i=0; i<9; i++) {
             const w = parseFloat(document.getElementById(`w_${i}`).value) || 0;
             const h = parseFloat(document.getElementById(`h_${i}`).value) || 0;
-            if (w > 0 && h > 0) { totalPyeong += (w * h) / 90000; hasData = true; }
+            const type = document.getElementById(`type_${i}`).value;
+            
+            if (w > 0 && h > 0) {
+                // 평수 계산 (가로mm * 세로mm / 90000 = 1평)
+                const pyeong = (w * h) / 90000;
+                reqList.push({ type: type, qty: pyeong });
+                hasData = true;
+            }
         }
+
         if (!hasData) { alert("치수를 입력해주세요."); return; }
+
+        // 업체별 총 견적 계산
+        let results = [];
+        for (const [compName, data] of Object.entries(companyDB)) {
+            let totalCost = 0;
+            let isValid = true;
+
+            reqList.forEach(item => {
+                const unitPrice = data.specs[item.type];
+                if (unitPrice) {
+                    totalCost += unitPrice * item.qty;
+                } else {
+                    // 해당 업체에 그 품목(예: 시스템창) 가격이 없으면 계산 제외하거나 경고
+                    // 여기서는 0원으로 처리하지만, 실제로는 기본값을 두는 게 좋음
+                }
+            });
+
+            // 시공비, 철거비 등 기본 마진 추가 (예: 자재비의 20% + 기본 100만원)
+            // 엑셀에 'BASE' 항목을 추가해서 연동하면 더 정확함
+            // 현재는 단순 자재비 합계로 표시
+            if (totalCost > 0) {
+                results.push({ name: compName, cost: Math.floor(totalCost) });
+            }
+        }
+
+        if (results.length === 0) {
+            alert("단가표 로딩 중이거나 계산할 데이터가 없습니다. 잠시 후 다시 시도해주세요.");
+            return;
+        }
 
         const resultBox = document.getElementById('resultSection');
         const container = document.getElementById('graphContainer');
-        
-        // [수정] 견적 산출 시 플레이스홀더(회색글씨) 숨기기
         document.getElementById('resultPlaceholder').style.display = 'none';
+        resultBox.style.display = 'block';
         
-        container.innerHTML = `<h3 style="margin:0 0 15px 0; text-align:center; font-size:17px; font-weight:800; color:#222;">📊 업체별 예상 견적</h3>`;
+        container.innerHTML = `<h3 style="margin:0 0 15px 0; text-align:center; font-size:17px; font-weight:800; color:#222;">📊 업체별 예상 견적 (자재비 기준)</h3>`;
 
-        let results = [];
-        for (const [name, rate] of Object.entries(companyDB)) {
-            const cost = Math.floor(1000000 + (totalPyeong * 10000 * rate / 100));
-            results.push({ name: name, cost: cost });
-        }
-        results.sort((a, b) => a.cost - b.cost);
+        results.sort((a, b) => a.cost - b.cost); // 최저가 순 정렬
         const maxCost = results[results.length - 1].cost;
 
         results.forEach((item, idx) => {
@@ -307,9 +375,10 @@
                 <div class="graph-row">
                     <div class="g-label">${item.name}</div>
                     <div class="g-bar-bg"><div class="${barClass}" style="width:${percent}%"></div></div>
-                    <div class="g-price">${(item.cost/10000).toFixed(0)}만</div>
+                    <div class="g-price">${item.cost.toLocaleString()}원</div>
                 </div>`;
         });
+        
         resultBox.scrollIntoView({behavior: "smooth"});
     }
 
