@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>청개구리 창호견적(무료)</title>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <style>
         /* [플랫폼 스타일 정의] */
         :root {
@@ -14,19 +15,18 @@
 
         body { font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif; background-color: var(--bg-color); margin: 0; padding: 0; color: #333; -webkit-font-smoothing: antialiased; }
 
-        /* 1. 헤더 디자인 (2단 레이아웃 적용) */
+        /* 1. 헤더 디자인 */
         header { 
             background: linear-gradient(100deg, #4285f4 0%, #0d47a1 100%);
-            padding: 0 15px; /* 패딩 조정 */
+            padding: 0 15px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
             display: flex; 
             align-items: center; 
-            /* justify-content 제거 (절대 위치 사용) */
             position: sticky; top: 0; z-index: 100; color: white;
-            height: 70px; /* [수정됨] 2줄 배치를 위해 높이 늘림 */
+            height: 70px;
         }
 
-        /* 로고 (좌측 중앙 고정) */
+        /* 로고 */
         .header-logo-area { 
             flex-shrink: 0; 
             position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
@@ -42,10 +42,10 @@
             padding: 4px; 
         }
 
-        /* [수정됨] 타이틀 (상단 중앙 배치) */
+        /* 타이틀 */
         .main-title {
             position: absolute;
-            top: 12px; /* 위쪽으로 배치 */
+            top: 12px;
             left: 50%;
             transform: translateX(-50%); 
             margin: 0; 
@@ -56,15 +56,15 @@
             text-shadow: 0 2px 4px rgba(0,0,0,0.2);
             white-space: nowrap; 
             z-index: 1;
-            width: 100%; /* 클릭 방지용 */
+            width: 100%;
             pointer-events: none;
         }
 
-        /* [수정됨] 버전 정보 (하단 우측 끝 배치) */
+        /* 버전 정보 */
         .sub-info { 
             position: absolute;
-            bottom: 8px; /* 아래쪽으로 배치 */
-            right: 15px; /* 우측 끝 */
+            bottom: 8px;
+            right: 15px;
             display: flex; 
             align-items: center; 
             gap: 5px;
@@ -102,10 +102,9 @@
         .ai-btn-img { width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; opacity: 0.85; z-index: 1; transition: transform 0.3s; }
         .ai-photo-slot:hover .ai-btn-img { opacity: 1.0; }
         
-        /* 화살표 스타일 (위로 향하게 ▲) */
         .ai-arrow-indicator {
             position: absolute; 
-            bottom: 10px; /* 바닥 위치 */
+            bottom: 10px; 
             left: 50%; 
             transform: translateX(-50%);
             z-index: 2; 
@@ -199,16 +198,16 @@
     <h1 class="main-title">청개구리 창호견적(무료)</h1>
 
     <div class="sub-info">
-        <span class="ver-badge">Ver 3.5</span>
-        <span class="ver-desc">헤더 슬림화 AI 화살표 적용</span>
+        <span class="ver-badge">Ver 3.6</span>
+        <span class="ver-desc">주소찾기 & 사진선택 기능 추가</span>
     </div>
 </header>
 
 <div class="container">
 
     <div class="address-box">
-        <input type="text" id="aptAddress" placeholder="아파트명 또는 주소 검색...">
-        <button class="btn-search">🔍 검색</button>
+        <input type="text" id="aptAddress" placeholder="동 이름 또는 아파트명 검색 (예: 대치동)" readonly onclick="openAddressSearch()">
+        <button class="btn-search" onclick="openAddressSearch()">🔍 주소찾기</button>
     </div>
 
     <div class="ai-guide-box">
@@ -220,7 +219,7 @@
                 <span class="ai-arrow-text">A4 위치</span>
             </div>
 
-            <input type="file" capture="environment" class="photo-input-hidden" onchange="alert('창문 전체가 나오도록 찍어주세요. AI가 치수를 분석합니다.')">
+            <input type="file" accept="image/*" class="photo-input-hidden" onchange="alert('창문 전체가 나오도록 찍어주세요. AI가 치수를 분석합니다.')">
         </div>
         <div class="ai-text-slot">
             <div class="ai-title"><span class="ai-badge">Tip</span> 치수 측정 방법</div>
@@ -270,13 +269,31 @@
         대표 : 전영웅
     </div>
     <div class="footer-line">
-        고객센터 1599-7380 (08:00~17:00) <span class="f-divider">|</span>
-        COPYRIGHT ⓒ 2025 All Rights Reserved.
+        <span class="f-highlight">고객센터 1599-7380</span> (08:00~17:00) <span class="f-divider">|</span>
+        COPYRIGHT ⓒ 2026 All Rights Reserved.
     </div>
 </footer>
 
 <script>
-    /* [기존 로직 유지] */
+    /* [추가됨] 주소 검색 팝업 실행 함수 (카카오 API) */
+    function openAddressSearch() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+                var roadAddr = data.roadAddress; // 도로명 주소 변수
+                var jibunAddr = data.jibunAddress; // 지번 주소 변수
+                
+                // 사용자가 선택한 주소를 input창에 넣어준다.
+                if(roadAddr !== ''){
+                    document.getElementById("aptAddress").value = roadAddr + " (" + data.buildingName + ")";
+                } else {
+                    document.getElementById("aptAddress").value = jibunAddr;
+                }
+            }
+        }).open();
+    }
+
+    /* [기존 로직 유지 + 카메라/갤러리 선택 기능 적용] */
     const locations = ["거실", "안방", "침실1", "침실2", "침실3", "주방", "발코니1", "발코니2", "터닝도어"];
     const inputArea = document.getElementById('inputListArea');
     const windowOptions = `
@@ -295,7 +312,8 @@
                     <div class="camera-circle"><i>📷</i></div>
                     <div class="photo-label">사진촬영<br>(A4부착)</div>
                     <div style="font-size:10px; color:#ff6b6b; font-weight:bold; margin-top:4px;">AI 측정</div>
-                    <input type="file" capture="environment" class="photo-input-hidden">
+                    
+                    <input type="file" accept="image/*" class="photo-input-hidden">
                 </div>
                 <div class="dim-area">
                     <div class="row-title">NO.${index + 1} &nbsp;${loc}</div>
@@ -382,12 +400,21 @@
                 <div class="graph-row">
                     <div class="g-label">${item.name.split(' ')[0]}</div>
                     <div class="g-bar-area">
-                        <div class="${barClass}" style="width: ${percent}%;"></div>
-                    </div>
+                        <div class="g-bar" style="width: 0%;"></div> </div>
                     <div class="g-price">${item.price.toLocaleString()}원</div>
                 </div>
             `;
-            graphContainer.innerHTML += html;
+            // 약간의 딜레이를 주어 애니메이션 효과 적용
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            graphContainer.appendChild(tempDiv.querySelector('.graph-row'));
+            
+            setTimeout(() => {
+                const bars = graphContainer.querySelectorAll('.g-bar');
+                bars[idx].style.width = percent + '%';
+                if(idx === 0) bars[idx].classList.add('best');
+                else if(idx === 1) bars[idx].classList.add('second');
+            }, 100);
         });
 
         resultSection.scrollIntoView({ behavior: 'smooth' });
