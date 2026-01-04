@@ -16,200 +16,169 @@
     </script>
 
     <style>
-        :root { --primary-color: #1a73e8; --bg-color: #f0f4f8; --card-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-        body { font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif; background-color: var(--bg-color); margin: 0; padding: 0; color: #333; -webkit-font-smoothing: antialiased; }
+        :root { --primary-color: #1a73e8; --bg-color: #f0f4f8; --card-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        body { font-family: 'Pretendard', sans-serif; background-color: var(--bg-color); margin: 0; padding: 0; color: #333; -webkit-font-smoothing: antialiased; }
 
-        header { background: linear-gradient(100deg, #4285f4 0%, #0d47a1 100%); padding: 0 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; position: sticky; top: 0; z-index: 100; color: white; height: 70px; }
-        .header-logo-area { flex-shrink: 0; position: absolute; left: 15px; top: 50%; transform: translateY(-50%); z-index: 2; }
-        .logo-clipart { width: 50px; height: 50px; object-fit: contain; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3)); background: rgba(255,255,255,0.95); border-radius: 12px; padding: 4px; }
-        .main-title { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); margin: 0; font-size: 22px; font-weight: 900; letter-spacing: -0.5px; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.2); white-space: nowrap; z-index: 1; width: 100%; pointer-events: none; }
-        .sub-info { position: absolute; bottom: 8px; right: 15px; display: flex; align-items: center; gap: 5px; z-index: 2; }
-        .ver-badge { font-size: 9px; background: #00e676; color: #000; padding: 1px 4px; border-radius: 3px; font-weight: 800; }
-        .ver-desc { font-size: 9px; color: #e3f2fd; font-weight: 400; letter-spacing: -0.3px; }
+        /* 헤더 */
+        header { background: linear-gradient(100deg, #4285f4 0%, #0d47a1 100%); padding: 0 15px; height: 60px; display: flex; align-items: center; position: sticky; top: 0; z-index: 100; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .logo-clipart { width: 40px; height: 40px; background: rgba(255,255,255,0.95); border-radius: 8px; padding: 2px; margin-right: 10px; }
+        .header-content { flex: 1; display: flex; justify-content: space-between; align-items: center; }
+        .main-title { margin: 0; font-size: 18px; font-weight: 800; }
+        .ver-badge { font-size: 10px; background: #00C73C; color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
 
-        .container { max-width: 768px; margin: 0 auto; padding: 20px; padding-bottom: 120px; }
+        .container { max-width: 768px; margin: 0 auto; padding: 15px; padding-bottom: 100px; }
 
-        .address-wrapper { background: white; padding: 15px; border-radius: 12px; box-shadow: var(--card-shadow); margin-bottom: 20px; border: 1px solid #edf2f7; }
-        .address-row { display: flex; gap: 8px; margin-bottom: 8px; }
-        .address-row input { border: none; background: #f7f9fc; padding: 12px; border-radius: 8px; flex: 1; font-weight: bold; color: #333; outline: none; }
-        .btn-search { background: #333; color: white; border: none; padding: 0 15px; border-radius: 8px; font-weight: bold; cursor: pointer; white-space: nowrap; }
-        .detail-input { width: 100%; border: 1px solid #e1e4e8; background: #fff; padding: 12px; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
-
-        /* 도면 업로드 섹션 (NEW) */
-        .blueprint-box { background: #e8f5e9; border: 1px solid #c8e6c9; border-radius: 16px; padding: 15px; margin-bottom: 25px; box-shadow: var(--card-shadow); text-align: center; position: relative; }
-        .blueprint-title { font-size: 15px; font-weight: 800; color: #2e7d32; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 5px; }
-        .blueprint-desc { font-size: 12px; color: #4caf50; margin-bottom: 12px; }
-        .btn-blueprint { background: #4caf50; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
-        .blueprint-preview { max-width: 100%; max-height: 200px; margin-top: 10px; border-radius: 8px; display: none; border: 2px solid #4caf50; }
-        .blueprint-file-input { position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: pointer; }
-
-        /* 가이드 박스 */
-        .ai-guide-box { background: white; border-radius: 16px; box-shadow: var(--card-shadow); margin-bottom: 25px; display: flex; overflow: hidden; border: 1px solid #d0e2ff; min-height: 110px; }
-        .ai-photo-slot { width: 45%; background: #000; position: relative; cursor: pointer; border-right: 1px solid #d0e2ff; display: flex; align-items: center; justify-content: center; padding: 0; overflow: hidden; }
-        .ai-btn-img { width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; opacity: 0.85; z-index: 1; }
-        .ai-arrow-indicator { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); z-index: 2; text-align: center; animation: bounceUp 1.5s infinite; }
-        .ai-arrow-icon { font-size: 28px; color: #ffff00; text-shadow: 0 2px 4px rgba(0,0,0,0.8); display: block; line-height: 0.8; margin-bottom: 2px; }
-        .ai-arrow-text { font-size: 11px; font-weight: 800; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.9); background: rgba(0,0,0,0.5); padding: 2px 6px; border-radius: 4px; }
-        @keyframes bounceUp { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -8px); } }
-        .ai-text-slot { width: 55%; padding: 15px; display: flex; flex-direction: column; justify-content: center; }
-        .ai-title { font-size: 14px; font-weight: 800; color: #333; margin-bottom: 8px; display: flex; align-items: center; }
-        .ai-badge { background: #333; color: white; font-size: 10px; padding: 2px 5px; border-radius: 4px; margin-right: 6px; }
-        .guide-list { margin: 0; padding: 0; list-style: none; font-size: 12px; color: #555; line-height: 1.5; }
-        .guide-list li { margin-bottom: 6px; position: relative; padding-left: 12px; }
-        .guide-list li::before { content: "•"; position: absolute; left: 0; color: var(--primary-color); font-weight: bold; }
-        .highlight { color: #d32f2f; font-weight: bold; background: #ffebee; padding: 0 2px; border-radius: 2px; }
-
-        /* 입력 카드 */
-        .input-card { background: white; border-radius: 16px; box-shadow: var(--card-shadow); margin-bottom: 20px; overflow: hidden; display: flex; flex-direction: column; }
-        @media (min-width: 400px) { .input-card { flex-direction: row; } .photo-area { width: 50%; aspect-ratio: 4/3; } .dim-area { width: 50%; } }
+        /* 주소 및 도면 섹션 */
+        .top-section { background: white; border-radius: 12px; padding: 15px; box-shadow: var(--card-shadow); margin-bottom: 15px; }
+        .address-row { display: flex; gap: 5px; margin-bottom: 8px; }
+        .address-row input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 6px; background: #f9f9f9; font-weight: bold; }
+        .btn-search { background: #333; color: white; border: none; padding: 0 12px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .detail-input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; margin-bottom: 8px;}
         
-        .photo-area { width: 100%; aspect-ratio: 4/3; background: #000; border-right: 1px solid #edf2f7; border-bottom: 1px solid #edf2f7; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; cursor: pointer; overflow: hidden; }
-        .photo-preview { width: 100%; height: 100%; object-fit: contain; display: none; background: #000; } 
-        .default-icon-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; background: #f8fafc; }
-        .camera-circle { width: 40px; height: 40px; background: #e3f2fd; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
-        .camera-circle i { font-size: 20px; color: var(--primary-color); font-style: normal; }
-        .photo-label { font-size: 12px; color: #555; font-weight: 600; text-align: center; } 
-        .photo-input-hidden { position: absolute; width: 100%; height: 100%; opacity: 0; cursor: pointer; left:0; top:0; z-index: 10; }
+        /* 네이버 버튼 */
+        .btn-naver { width: 100%; background: #03C75A; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; margin-bottom: 10px; }
         
-        .ai-loading { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); z-index: 20; display: none; flex-direction: column; justify-content: center; align-items: center; font-weight: bold; color: #fff; font-size: 14px; backdrop-filter: blur(2px); }
-        .spinner { border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid #fff; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin-bottom: 10px; }
+        /* 도면 업로드 영역 */
+        .blueprint-area { border: 2px dashed #03C75A; border-radius: 8px; padding: 10px; text-align: center; position: relative; background: #f0fdf4; cursor: pointer; }
+        .blueprint-text { font-size: 12px; color: #2e7d32; font-weight: bold; }
+        .blueprint-preview { max-height: 150px; display: none; margin: 0 auto; border-radius: 4px; margin-top: 5px; border: 1px solid #ddd; }
+        .file-hidden { position: absolute; top:0; left:0; width:100%; height:100%; opacity: 0; cursor: pointer; }
+
+        /* 입력 카드 (슬림형 디자인 적용) */
+        .input-card { 
+            background: white; border-radius: 12px; box-shadow: var(--card-shadow); margin-bottom: 10px; 
+            display: flex; flex-direction: row; height: 140px; overflow: hidden; border: 1px solid #eee;
+        }
+        
+        /* 좌측: 사진 영역 (40%) */
+        .photo-area { 
+            width: 40%; background: #f1f3f5; position: relative; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            border-right: 1px solid #eee;
+        }
+        .photo-area img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        .camera-icon { font-size: 24px; margin-bottom: 5px; }
+        .photo-hint { font-size: 11px; color: #666; text-align: center; line-height: 1.2; }
+        .photo-hint strong { color: #e53935; }
+
+        /* 우측: 입력 영역 (60%) */
+        .dim-area { width: 60%; padding: 10px; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
+        .row-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
+        .row-title { font-size: 15px; font-weight: 800; color: var(--primary-color); }
+        .badge-ai { font-size: 10px; background: #e3f2fd; color: #1565c0; padding: 2px 4px; border-radius: 3px; display: none; }
+        
+        select, input[type="number"] { 
+            width: 100%; height: 32px; border: 1px solid #ddd; border-radius: 5px; 
+            font-size: 13px; padding-left: 5px; box-sizing: border-box; background: #fff;
+        }
+        .size-inputs { display: flex; gap: 5px; }
+
+        /* 로딩 오버레이 */
+        .loading-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.9); z-index: 10;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .spinner { width: 20px; height: 20px; border: 3px solid #ddd; border-top: 3px solid var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .dim-area { flex: 1; padding: 15px; display: flex; flex-direction: column; gap: 8px; justify-content: center;}
-        .row-title { font-size: 15px; color: var(--primary-color); font-weight: 800; margin-bottom: 2px; }
-        select, input[type="number"] { width: 100%; padding: 0 10px; height: 42px; border: 1px solid #e1e4e8; border-radius: 8px; font-size: 14px; background: #fff; box-sizing: border-box; }
-        .form-row { display: flex; gap: 8px; }
+        /* 하단 버튼 및 결과 */
+        .btn-group { display: flex; gap: 8px; margin-top: 20px; }
+        .btn-main { flex: 1; padding: 15px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; color: white; font-size: 15px; }
+        .btn-calc { background: var(--primary-color); }
+        .btn-save { background: #ff9800; }
 
-        .btn-group { display: flex; gap: 10px; margin-top: 10px; }
-        .btn-calc { flex: 6; padding: 18px; background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%); color: white; border: none; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer; box-shadow: 0 8px 15px rgba(26, 115, 232, 0.3); }
-        .btn-save { flex: 4; padding: 18px; background: #ff9800; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer; box-shadow: 0 8px 15px rgba(255, 152, 0, 0.3); display: flex; align-items: center; justify-content: center; gap:5px; }
+        .chart-box { background: white; padding: 15px; border-radius: 12px; margin-top: 20px; display: none; }
+        .graph-row { display: flex; align-items: center; margin-bottom: 10px; font-size: 12px; }
+        .g-label { width: 40px; font-weight: bold; }
+        .g-bar-bg { flex: 1; height: 20px; background: #f0f0f0; margin: 0 10px; border-radius: 4px; overflow: hidden; }
+        .g-bar { height: 100%; background: #90a4ae; width: 0%; transition: width 1s; }
+        .g-bar.best { background: #ff7043; }
+        .g-price { width: 70px; text-align: right; font-weight: bold; }
 
-        .disclaimer-box { text-align: center; margin-top: 15px; padding: 12px; background: #fff8e1; border-radius: 12px; border: 1px solid #ffe0b2; color: #8d6e63; font-size: 12px; line-height: 1.5; box-shadow: 0 2px 8px rgba(255, 193, 7, 0.1); word-break: keep-all; margin-bottom: 25px; }
-
-        .result-section { display: none; margin-top: 20px; border-top: 2px dashed #ddd; padding-top: 30px; }
-        .chart-box { background: white; padding: 25px 20px; border-radius: 16px; box-shadow: var(--card-shadow); margin-bottom: 30px; }
-        .chart-title { font-size: 17px; font-weight: 800; margin-bottom: 20px; color: #222; }
-        .graph-row { display: flex; align-items: center; margin-bottom: 15px; font-size: 13px; }
-        .g-label { width: 50px; font-weight: 700; color: #555; }
-        .g-bar-area { flex: 1; height: 32px; background: #f1f3f5; border-radius: 6px; overflow: hidden; position: relative; margin: 0 12px; }
-        .g-bar { height: 100%; background: #aeb5bc; width: 0%; transition: width 1s; border-radius: 6px; }
-        .g-bar.best { background: #ff6b6b; } 
-        .g-bar.second { background: #339af0; }
-        .g-price { width: 75px; text-align: right; font-weight: 800; color: #333; font-size: 14px; }
-
-        .contact-title { font-size: 16px; font-weight: 800; color: #333; margin-bottom: 10px; text-align: center; border-top: 1px solid #eee; padding-top: 20px; }
-        .contact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 30px; }
-        .btn-call { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; border-radius: 8px; text-decoration: none; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.15); transition: transform 0.1s; position: relative; min-height: 70px; }
-        .btn-call:active { transform: translateY(2px); }
-        .c-A { background: #E53935; } .c-B { background: #FB8C00; } .c-C { background: #FDD835; color: #333; }
-        .c-D { background: #43A047; } .c-E { background: #1E88E5; } .c-F { background: #8E24AA; }
-        .btn-call strong { font-size: 14px; margin-bottom: 2px; }
-        .btn-call span { font-size: 10px; opacity: 0.9; white-space: nowrap; }
-        .icon-phone { font-size: 16px; margin-bottom: 4px; opacity: 0.9; font-style: normal; }
-
-        footer { background: #212529; color: #adb5bd; padding: 25px 15px; text-align: center; }
-        .footer-line { display: block; font-size: 11px; line-height: 1.6; word-break: keep-all; }
-        .f-divider { color: #495057; margin: 0 6px; font-size: 10px; }
-        .f-highlight { color: #fff; font-weight: bold; }
+        footer { text-align: center; font-size: 11px; color: #999; margin-top: 30px; padding-bottom: 20px; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="header-logo-area">
-        <img src="logo.png" alt="견적서 로고" class="logo-clipart" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3176/3176366.png'"> 
-    </div>
-    <h1 class="main-title">청개구리 창호견적(무료)</h1>
-    <div class="sub-info">
-        <span class="ver-badge">Ver 10.0 Blueprint</span>
-        <span class="ver-desc">도면분석</span>
+    <div style="display:flex; align-items:center;">
+        <img src="logo.png" class="logo-clipart" onerror="this.style.background='#eee'">
+        <div class="header-content">
+            <h1 class="main-title">청개구리 창호견적</h1>
+            <span class="ver-badge">Ver 10.1 Naver Link</span>
+        </div>
     </div>
 </header>
 
 <div class="container" id="captureArea">
     
-    <div class="address-wrapper">
+    <div class="top-section">
         <div class="address-row">
-            <input type="text" id="aptAddress" placeholder="주소 검색 클릭 (예: 대치동)" readonly onclick="openAddressSearch()">
-            <button class="btn-search" onclick="openAddressSearch()">🔍 주소찾기</button>
+            <input type="text" id="aptAddress" placeholder="아파트명 검색 (예: 은마아파트)" readonly onclick="openAddressSearch()">
+            <button class="btn-search" onclick="openAddressSearch()">🔍</button>
         </div>
-        <input type="text" class="detail-input" id="detailAddress" placeholder="상세 주소 입력 (예: 101동 1204호)">
-    </div>
+        <input type="text" class="detail-input" id="detailAddress" placeholder="동/호수 입력">
+        
+        <button class="btn-naver" onclick="searchNaverLand()">
+            <span>N</span> 네이버 부동산에서 도면 찾기
+        </button>
 
-    <div class="blueprint-box">
-        <div class="blueprint-title">📐 아파트 평면도(도면) 등록</div>
-        <div class="blueprint-desc">네이버 부동산 등에서 캡처한 도면을 올리면<br><strong>오차 0mm</strong>의 정확한 치수를 자동 입력합니다!</div>
-        <div class="btn-blueprint">
-            <i class="fas fa-upload"></i> 도면 사진 선택하기
-            <input type="file" accept="image/*" class="blueprint-file-input" onchange="handleBlueprintUpload(this)">
-        </div>
-        <img id="blueprintPreview" class="blueprint-preview">
-    </div>
-
-    <div class="ai-guide-box">
-        <div class="ai-photo-slot">
-            <img src="Gemini_Generated_Image_lk91n8lk91n8lk91.png" alt="AI측정" class="ai-btn-img" onerror="this.style.display='none';">
-            <div class="ai-arrow-indicator">
-                <span class="ai-arrow-icon">▲</span>
-                <span class="ai-arrow-text">A4 위치</span>
-            </div>
-        </div>
-        <div class="ai-text-slot">
-            <div class="ai-title"><span class="ai-badge">Tip</span> AI 사용 꿀팁</div>
-            <ul class="guide-list">
-                <li><strong>도면 활용:</strong> 위쪽 초록색 박스에 <span class="highlight">도면</span>을 먼저 등록해 보세요.</li>
-                <li><strong>자동 매칭:</strong> 각 방 사진을 찍으면 AI가 도면에서 해당 위치를 찾아 정확한 숫자를 읽어옵니다.</li>
-            </ul>
+        <div class="blueprint-area">
+            <div class="blueprint-text">📸 위에서 찾은 <strong>도면을 캡처</strong>해서 올려주세요! (오차 0mm)</div>
+            <img id="blueprintPreview" class="blueprint-preview">
+            <input type="file" accept="image/*" class="file-hidden" onchange="handleBlueprintUpload(this)">
         </div>
     </div>
 
     <div id="inputListArea"></div>
 
     <div class="btn-group">
-        <button class="btn-calc" onclick="calculateEstimates()">✨ 업체별 가격비교</button>
-        <button class="btn-save" onclick="saveAsImage()">📸 비교 저장</button>
+        <button class="btn-main btn-calc" onclick="calculateEstimates()">✨ 견적 산출</button>
+        <button class="btn-main btn-save" onclick="saveAsImage()">📸 저장</button>
     </div>
 
-    <div class="disclaimer-box">
-        <strong style="display:block; margin-bottom:4px;">⚠️ 견적 유의사항</strong>
-        상기 견적은 시공여건과 추가옵션에 따른 비용상승이 발생할 수 있습니다.<br>
-        전문 매니저의 <strong>무료 방문 실측</strong>을 추천드립니다.
-    </div>
-
-    <div class="contact-title">📞 제휴 시공사 다이렉트 연결</div>
-    <div class="contact-grid">
-        <a href="tel:01000000001" class="btn-call c-A"><i class="icon-phone">📞</i><strong>A사</strong><span>표준시공</span></a>
-        <a href="tel:01000000002" class="btn-call c-B"><i class="icon-phone">📞</i><strong>B사</strong><span>알뜰형</span></a>
-        <a href="tel:01000000003" class="btn-call c-C"><i class="icon-phone">📞</i><strong>C사</strong><span>프리미엄</span></a>
-        <a href="tel:01000000004" class="btn-call c-D"><i class="icon-phone">📞</i><strong>D사</strong><span>빠른시공</span></a>
-        <a href="tel:01000000005" class="btn-call c-E"><i class="icon-phone">📞</i><strong>E사</strong><span>특화시공</span></a>
-        <a href="tel:01000000006" class="btn-call c-F"><i class="icon-phone">📞</i><strong>F사</strong><span>친절상담</span></a>
-    </div>
-
-    <div id="resultSection" class="result-section">
-        <div class="chart-box">
-            <div class="chart-title">📊 업체별 예상 견적 비교</div>
-            <div id="graphContainer"></div>
-        </div>
+    <div class="chart-box" id="resultSection">
+        <h3 style="margin:0 0 15px 0; text-align:center;">📊 업체별 예상 견적</h3>
+        <div id="graphContainer"></div>
     </div>
 </div>
 
 <footer>
-    <div class="footer-line">
-        <span class="f-highlight">청개구리샤시</span> <span class="f-divider">|</span>
-        사업자 : 123-36-31426 <span class="f-divider">|</span>
-        대표 : 전영웅
-    </div>
-    <div class="footer-line">
-        고객센터 1599-7380 (08시~17시) <span class="f-divider">|</span>
-        COPYRIGHT ⓒ 2026
-    </div>
+    청개구리샤시 | 고객센터 1599-7380<br>
+    Copyright 2026 All Rights Reserved.
 </footer>
 
 <script>
-    // 전역 변수: 도면 파일 저장용
+    // 전역 변수: 도면 파일
     let globalBlueprintFile = null;
 
+    // 1. 주소 찾기
+    function openAddressSearch() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                var addr = data.roadAddress || data.jibunAddress;
+                if(data.buildingName) addr += " (" + data.buildingName + ")";
+                document.getElementById("aptAddress").value = addr;
+            }
+        }).open();
+    }
+
+    // 2. [NEW] 네이버 부동산 검색 기능
+    function searchNaverLand() {
+        const addr = document.getElementById("aptAddress").value;
+        if (!addr) {
+            alert("먼저 주소를 검색해주세요!");
+            return;
+        }
+        // 주소에서 핵심 키워드(아파트명)만 추출해서 검색
+        const query = addr.split("(")[0].trim(); 
+        const url = `https://m.land.naver.com/search/result/${encodeURIComponent(query)}`;
+        window.open(url, '_blank');
+        alert("네이버 부동산이 열리면 '단지정보 > 평면도'를 캡처해서 등록해주세요.");
+    }
+
+    // 3. 도면 업로드 처리
     function handleBlueprintUpload(input) {
         if (input.files && input.files[0]) {
             globalBlueprintFile = input.files[0];
@@ -218,38 +187,12 @@
                 const img = document.getElementById('blueprintPreview');
                 img.src = e.target.result;
                 img.style.display = 'block';
-                alert("✅ 도면이 등록되었습니다!\n이제 각 방의 사진을 찍으면 AI가 도면 치수를 참고하여 정확히 계산합니다.");
             };
             reader.readAsDataURL(input.files[0]);
         }
     }
 
-    function openAddressSearch() {
-        new daum.Postcode({
-            oncomplete: function(data) {
-                var roadAddr = data.roadAddress; 
-                var jibunAddr = data.jibunAddress; 
-                if(roadAddr !== ''){
-                    document.getElementById("aptAddress").value = roadAddr + " (" + data.buildingName + ")";
-                } else {
-                    document.getElementById("aptAddress").value = jibunAddr;
-                }
-                document.getElementById("detailAddress").focus();
-            }
-        }).open();
-    }
-
-    function saveAsImage() {
-        alert("견적 결과를 이미지로 저장합니다.\n(잠시만 기다려주세요...)");
-        const captureArea = document.body;
-        html2canvas(captureArea).then(canvas => {
-            const link = document.createElement('a');
-            link.download = '청개구리_견적결과_' + new Date().getTime() + '.png';
-            link.href = canvas.toDataURL();
-            link.click();
-        });
-    }
-
+    // 4. 입력 카드 생성 (슬림 레이아웃)
     const locations = ["거실", "안방", "침실1", "침실2", "침실3", "주방", "발코니1", "발코니2", "터닝도어"];
     const inputArea = document.getElementById('inputListArea');
     const windowOptions = `
@@ -257,38 +200,33 @@
         <option value="S_BAL">발코니용 단창 (외부)</option>
         <option value="D_IN">내부용 이중창</option>
         <option value="D_EXT">확장형 이중창 (단열↑)</option>
-        <option value="SYS">공틀일체형 / 시스템창</option>
+        <option value="SYS">시스템창 / 터닝도어</option>
         <option value="PJ">PJ창 / 프로젝트창</option>
     `;
 
     locations.forEach((loc, index) => {
         const html = `
             <div class="input-card">
-                <div id="loading_${index}" class="ai-loading">
+                <div class="loading-overlay" id="loading_${index}">
                     <div class="spinner"></div>
-                    <span>도면+AI 분석중...</span>
+                    <span style="font-size:11px; margin-top:5px; font-weight:bold;">분석중..</span>
                 </div>
-
+                
                 <div class="photo-area">
-                    <div id="defaultIcon_${index}" class="default-icon-wrap">
-                        <div class="camera-circle"><i>📷</i></div>
-                        <div class="photo-label">사진촬영<br>(A4부착)</div>
-                        <div style="font-size:10px; color:#ff6b6b; font-weight:bold; margin-top:4px;">AI 측정</div>
-                    </div>
-                    <img id="previewImg_${index}" class="photo-preview">
-                    <input type="file" accept="image/*" class="photo-input-hidden" onchange="window.handleImageUpload(this, ${index})">
+                    <div class="camera-icon" id="icon_${index}">📷</div>
+                    <div class="photo-hint" id="hint_${index}">사진촬영<br><strong>(A4부착)</strong></div>
+                    <img id="preview_${index}">
+                    <input type="file" accept="image/*" class="file-hidden" onchange="window.handleImageUpload(this, ${index})">
                 </div>
 
                 <div class="dim-area">
-                    <div class="row-title">NO.${index + 1} &nbsp;${loc}</div>
-                    <div class="form-row">
-                        <select id="loc_${index}" style="flex:1;">
-                            <option value="${loc}" selected>${loc}</option>
-                            ${locations.map(l => `<option value="${l}">${l}</option>`).join('')}
-                        </select>
+                    <div class="row-head">
+                        <div class="row-title">NO.${index + 1} ${loc}</div>
+                        <div class="badge-ai" id="badge_${index}">AI 완료</div>
                     </div>
-                    <select id="type_${index}" style="margin-bottom:5px;">${windowOptions}</select>
-                    <div class="form-row">
+                    <input type="hidden" id="loc_${index}" value="${loc}">
+                    <select id="type_${index}">${windowOptions}</select>
+                    <div class="size-inputs">
                         <input type="number" id="w_${index}" placeholder="가로 mm">
                         <input type="number" id="h_${index}" placeholder="세로 mm">
                     </div>
@@ -298,90 +236,65 @@
         inputArea.innerHTML += html;
     });
 
+    // 5. 견적 계산 및 그래프
     const companyDB = {
-        'A사': { name: 'A사 (표준)', specs: { 'S_IN': 13000, 'S_BAL': 14000, 'D_IN': 20000, 'D_EXT': 24000, 'SYS': 14000, 'PJ': 15000 } },
-        'B사': { name: 'B사 (알뜰)', specs: { 'S_IN': 12500, 'S_BAL': 13500, 'D_IN': 19500, 'D_EXT': 23500, 'SYS': 13500, 'PJ': 14500 } },
-        'C사': { name: 'C사 (고급)', specs: { 'S_IN': 15000, 'S_BAL': 16000, 'D_IN': 22000, 'D_EXT': 26000, 'SYS': 16000, 'PJ': 17000 } },
-        'D사': { name: 'D사 (빠른)', specs: { 'S_IN': 13200, 'S_BAL': 14200, 'D_IN': 20200, 'D_EXT': 24200, 'SYS': 14200, 'PJ': 15200 } },
-        'E사': { name: 'E사 (특화)', specs: { 'S_IN': 12800, 'S_BAL': 13800, 'D_IN': 19800, 'D_EXT': 23800, 'SYS': 13800, 'PJ': 14800 } },
-        'F사': { name: 'F사 (친절)', specs: { 'S_IN': 14000, 'S_BAL': 15000, 'D_IN': 21000, 'D_EXT': 25000, 'SYS': 15000, 'PJ': 16000 } }
+        'A사': { name: 'A사', price: 100 }, 'B사': { name: 'B사', price: 90 }, 'C사': { name: 'C사', price: 120 },
+        'D사': { name: 'D사', price: 95 }, 'E사': { name: 'E사', price: 105 }, 'F사': { name: 'F사', price: 110 }
     };
 
     function calculateEstimates() {
-        let totalArea = 0;
-        let requestList = [];
+        let totalPyeong = 0;
+        let hasData = false;
 
         for(let i=0; i<9; i++) {
             const w = parseFloat(document.getElementById(`w_${i}`).value) || 0;
             const h = parseFloat(document.getElementById(`h_${i}`).value) || 0;
-            const typeCode = document.getElementById(`type_${i}`).value;
-
             if (w > 0 && h > 0) {
-                const pyeong = (w * h) / 90000;
-                requestList.push({ typeCode: typeCode, qty: pyeong });
-                totalArea += pyeong;
+                totalPyeong += (w * h) / 90000; 
+                hasData = true;
             }
         }
 
-        if (totalArea === 0) {
-            alert("정확한 견적을 위해 치수를 하나 이상 입력해주세요.");
-            return;
-        }
+        if (!hasData) { alert("치수를 하나 이상 입력해주세요."); return; }
+
+        const resultBox = document.getElementById('resultSection');
+        const container = document.getElementById('graphContainer');
+        resultBox.style.display = 'block';
+        container.innerHTML = '';
 
         let results = [];
-        const compKeys = Object.keys(companyDB);
+        for (const [key, val] of Object.entries(companyDB)) {
+            // 단순 예시 계산식 (실제 로직은 복잡할 수 있음)
+            const cost = Math.floor(1000000 + (totalPyeong * 10000 * val.price / 100));
+            results.push({ name: val.name, cost: cost });
+        }
+        results.sort((a, b) => a.cost - b.cost);
+        const maxCost = results[results.length - 1].cost;
 
-        compKeys.forEach(key => {
-            const comp = companyDB[key];
-            let totalCost = 0;
-            requestList.forEach((req) => {
-                const price = comp.specs[req.typeCode] || 0;
-                totalCost += price * req.qty;
-            });
-            const baseCost = 1000000 + (totalArea * 10000); 
-            results.push({ name: comp.name, price: Math.floor(totalCost + baseCost) });
-        });
-
-        renderGraph(results);
-    }
-
-    function renderGraph(data) {
-        const resultSection = document.getElementById('resultSection');
-        const graphContainer = document.getElementById('graphContainer');
-        resultSection.style.display = 'block';
-        graphContainer.innerHTML = '';
-
-        data.sort((a, b) => a.price - b.price);
-        const maxPrice = Math.max(...data.map(d => d.price));
-
-        data.forEach((item, idx) => {
-            const percent = (item.price / maxPrice) * 100;
-            let barClass = 'g-bar';
-            if (idx === 0) barClass += ' best'; 
-            else if (idx === 1) barClass += ' second'; 
-
+        results.forEach((item, idx) => {
+            const percent = (item.cost / maxCost) * 100;
+            const barClass = idx === 0 ? 'g-bar best' : (idx === 1 ? 'g-bar second' : 'g-bar');
+            
             const html = `
                 <div class="graph-row">
-                    <div class="g-label">${item.name.split(' ')[0]}</div>
-                    <div class="g-bar-area">
-                        <div class="g-bar" style="width: 0%;"></div> 
-                    </div>
-                    <div class="g-price">${item.price.toLocaleString()}원</div>
+                    <div class="g-label">${item.name}</div>
+                    <div class="g-bar-bg"><div class="${barClass}" style="width:${percent}%"></div></div>
+                    <div class="g-price">${(item.cost/10000).toFixed(0)}만</div>
                 </div>
             `;
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = html;
-            graphContainer.appendChild(tempDiv.querySelector('.graph-row'));
-            
-            setTimeout(() => {
-                const bars = graphContainer.querySelectorAll('.g-bar');
-                bars[idx].style.width = percent + '%';
-                if(idx === 0) bars[idx].classList.add('best');
-                else if(idx === 1) bars[idx].classList.add('second');
-            }, 100);
+            container.innerHTML += html;
         });
+        
+        resultBox.scrollIntoView({behavior: "smooth"});
+    }
 
-        resultSection.scrollIntoView({ behavior: 'smooth' });
+    function saveAsImage() {
+        html2canvas(document.body).then(canvas => {
+            const link = document.createElement('a');
+            link.download = '견적결과.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        });
     }
 </script>
 
@@ -397,90 +310,77 @@
         const file = inputElement.files[0];
         if (!file) return;
 
-        // 위치 이름 (예: 거실)
-        const locationName = document.getElementById(`loc_${index}`).value;
-
         // 미리보기
         const reader = new FileReader();
         reader.onload = function(e) {
-            document.getElementById('defaultIcon_' + index).style.display = 'none';
-            const img = document.getElementById('previewImg_' + index);
+            document.getElementById(`icon_${index}`).style.display = 'none';
+            document.getElementById(`hint_${index}`).style.display = 'none';
+            const img = document.getElementById(`preview_${index}`);
             img.src = e.target.result;
             img.style.display = 'block';
         }
         reader.readAsDataURL(file);
 
-        const loadingOverlay = document.getElementById(`loading_${index}`);
-        if(loadingOverlay) loadingOverlay.style.display = 'flex';
+        // 로딩 시작
+        const loading = document.getElementById(`loading_${index}`);
+        loading.style.display = 'flex';
 
         try {
             const genAI = new GoogleGenerativeAI(API_KEY);
-            // 멀티모달 분석을 위해 성능 좋은 2.0 사용
             const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
             
-            const imagePart = await fileToGenerativePart(file); // 방 사진
+            const imagePart = await fileToGenerativePart(file);
+            const locationName = document.getElementById(`loc_${index}`).value;
             
             let parts = [imagePart];
-            let promptText = "";
+            let prompt = "";
 
-            // 도면이 있는지 확인
             if (window.globalBlueprintFile) {
+                // 도면이 있는 경우
                 const blueprintPart = await fileToGenerativePart(window.globalBlueprintFile);
-                parts.push(blueprintPart); // 도면도 같이 보냄
-                promptText = `
-                    당신은 건축 도면 분석 및 창호 견적 전문가입니다.
-                    두 장의 이미지를 제공했습니다.
-                    1. 첫 번째 이미지: 현장(방) 사진
-                    2. 두 번째 이미지: 아파트 전체 평면도(도면)
+                parts.push(blueprintPart);
+                prompt = `
+                    당신은 창호 견적 전문가입니다.
+                    이미지1: 현장(${locationName}) 사진 (A4용지 부착됨)
+                    이미지2: 아파트 평면도(도면)
 
                     [임무]
-                    - 현장 사진을 보고 이것이 도면의 어느 위치(${locationName})인지 파악하세요.
-                    - **도면(평면도) 이미지에서 해당 위치의 창문 치수(숫자)**를 읽어내세요. (보통 mm 단위 숫자)
-                    - 만약 도면에서 숫자를 읽을 수 있다면, 그 **도면상의 수치**를 최우선으로 적용하세요. (오차 0mm 목표)
-                    - 도면 판독이 어렵다면, 현장 사진 속 A4 용지(210x297mm)를 기준으로 추정하세요.
-                    - **거실**의 경우, 도면에 '분합창' 또는 '거실창' 위치의 전체 너비를 읽으세요.
+                    1. 도면에서 **${locationName}**의 위치를 찾아 적혀있는 치수(가로x세로)를 읽으세요.
+                    2. 도면 수치가 식별되면 그것을 우선 적용하세요.
+                    3. 식별이 안되면, 현장 사진 속 A4용지(210x297mm)를 기준으로 전체 창틀 크기를 계산하세요.
+                    4. 거실이나 안방은 창문 하나가 아니라 **전체 벽면 너비**를 계산해야 합니다.
                 `;
             } else {
-                // 도면 없이 사진만 있는 경우 (기존 로직 강화)
-                promptText = `
-                    당신은 창호 견적 전문가입니다. 
-                    사진 속 **${locationName}** 창문의 전체 크기(가로x세로)를 A4용지(210x297mm) 기준으로 계산하세요.
+                // 사진만 있는 경우
+                prompt = `
+                    당신은 창호 견적 전문가입니다.
+                    사진 속 **${locationName}** 창문의 전체 틀 크기(가로x세로)를 A4용지(210x297mm) 기준으로 계산하세요.
                     
-                    [필독: 보정 규칙]
-                    - 거실(Living Room): 측정값이 3000mm 미만이면, 창문 한 짝만 찍힌 것이니 한국 아파트 표준 거실 너비(3600mm, 3900mm, 4200mm 중 하나)로 강제 보정하세요.
-                    - 침실/안방: 높이가 1800mm~2000mm 사이면, 바닥창(분합문)이므로 표준 높이 2200mm~2300mm로 보정하세요.
-                    - 블라인드/커튼박스: 상단이 가려져 있다면 높이에 +200mm 하세요.
+                    [보정 규칙]
+                    - 거실: 3000mm 미만이면 창문 한 짝만 찍힌 것이니 한국 아파트 표준(3600~4500mm)으로 보정하세요.
+                    - 안방/침실: 높이가 1800~2000mm면 발코니창이므로 2200~2300mm로 보정하세요.
+                    - 블라인드: 상단에 있으면 높이 +200mm 하세요.
                 `;
             }
 
-            promptText += `
-                [출력 형식]
-                오직 JSON으로만 답하세요:
-                {
-                    "typeCode": "문자열 (S_BAL, S_IN, D_IN, D_EXT, SYS, PJ 중 택1)",
-                    "width": 숫자 (mm 단위 정수),
-                    "height": 숫자 (mm 단위 정수)
-                }
-            `;
-
-            parts.unshift(promptText); // 프롬프트를 맨 앞에
+            prompt += ` 오직 JSON으로 답하세요: {"typeCode": "S_BAL" 등, "width": 숫자, "height": 숫자}`;
+            parts.unshift(prompt);
 
             const result = await model.generateContent(parts);
             const response = await result.response;
             const text = response.text().replace(/```json|```/g, "").trim();
             const data = JSON.parse(text);
 
-            if(data.typeCode) document.getElementById(`type_${index}`).value = data.typeCode;
-            if(data.width) document.getElementById(`w_${index}`).value = data.width;
-            if(data.height) document.getElementById(`h_${index}`).value = data.height;
-
-            console.log("AI 분석(도면포함) 성공:", data);
+            document.getElementById(`type_${index}`).value = data.typeCode;
+            document.getElementById(`w_${index}`).value = data.width;
+            document.getElementById(`h_${index}`).value = data.height;
+            document.getElementById(`badge_${index}`).style.display = 'block';
 
         } catch (error) {
             console.error(error);
-            alert("⚠️ AI 분석 오류:\n" + error.message + "\n\n(직접 치수를 입력해주세요)");
+            alert("AI 분석 실패. 직접 입력해주세요.");
         } finally {
-            if(loadingOverlay) loadingOverlay.style.display = 'none';
+            loading.style.display = 'none';
         }
     };
 
