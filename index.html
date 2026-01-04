@@ -19,37 +19,19 @@
         :root { --primary-color: #1a73e8; --bg-color: #f0f4f8; --card-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         body { font-family: 'Pretendard', sans-serif; background-color: var(--bg-color); margin: 0; padding: 0; color: #333; -webkit-font-smoothing: antialiased; }
 
-        /* [수정됨] 헤더 스타일: 화면 최상단 고정 */
+        /* 헤더 (상단 고정) */
         header { 
             background: linear-gradient(100deg, #4285f4 0%, #0d47a1 100%); 
-            padding: 0 15px; 
-            height: 60px; 
-            display: flex; 
-            align-items: center; 
-            /* position: sticky; 를 fixed로 변경하여 무조건 맨 위에 고정 */
-            position: fixed; 
-            top: 0; 
-            left: 0;
-            width: 100%; /* 전체 너비 사용 */
-            z-index: 100; 
-            color: white; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
-            box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
+            padding: 0 15px; height: 60px; display: flex; align-items: center; 
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 100; 
+            color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); box-sizing: border-box; 
         }
         .logo-clipart { width: 40px; height: 40px; background: rgba(255,255,255,0.95); border-radius: 8px; padding: 2px; margin-right: 10px; }
-        .header-content { flex: 1; display: flex; justify-content: space-between; align-items: center; }
+        .header-content { flex: 1; }
         .main-title { margin: 0; font-size: 18px; font-weight: 800; }
         .ver-badge { font-size: 10px; background: #00C73C; color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
 
-        /* [수정됨] 컨테이너 스타일: 상단 여백 추가 */
-        .container { 
-            max-width: 768px; 
-            margin: 0 auto; 
-            padding: 15px; 
-            /* 헤더 높이(60px) + 기본 패딩(15px) 만큼 상단 여백 확보 */
-            padding-top: 75px; 
-            padding-bottom: 100px; 
-        }
+        .container { max-width: 768px; margin: 0 auto; padding: 15px; padding-top: 75px; padding-bottom: 100px; }
 
         /* 주소 및 도면 섹션 */
         .top-section { background: white; border-radius: 12px; padding: 15px; box-shadow: var(--card-shadow); margin-bottom: 15px; }
@@ -58,54 +40,59 @@
         .btn-search { background: #333; color: white; border: none; padding: 0 12px; border-radius: 6px; font-weight: bold; cursor: pointer; }
         .detail-input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; margin-bottom: 8px;}
         
-        /* 네이버 버튼 */
-        .btn-naver { width: 100%; background: #03C75A; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; margin-bottom: 10px; }
-        
-        /* 도면 업로드 영역 */
-        .blueprint-area { border: 2px dashed #03C75A; border-radius: 8px; padding: 10px; text-align: center; position: relative; background: #f0fdf4; cursor: pointer; }
-        .blueprint-text { font-size: 12px; color: #2e7d32; font-weight: bold; }
-        .blueprint-preview { max-height: 150px; display: none; margin: 0 auto; border-radius: 4px; margin-top: 5px; border: 1px solid #ddd; }
-        .file-hidden { position: absolute; top:0; left:0; width:100%; height:100%; opacity: 0; cursor: pointer; }
+        /* [NEW] 자동 검색 버튼 스타일 */
+        .btn-auto-search { 
+            width: 100%; background: linear-gradient(90deg, #03C75A 0%, #008f40 100%); 
+            color: white; border: none; padding: 12px; border-radius: 8px; 
+            font-size: 15px; font-weight: 800; cursor: pointer; 
+            display: flex; align-items: center; justify-content: center; gap: 8px; 
+            box-shadow: 0 4px 6px rgba(3, 199, 90, 0.2); transition: transform 0.1s;
+        }
+        .btn-auto-search:active { transform: scale(0.98); }
 
-        /* 입력 카드 (슬림형 디자인 적용) */
-        .input-card { 
-            background: white; border-radius: 12px; box-shadow: var(--card-shadow); margin-bottom: 10px; 
-            display: flex; flex-direction: row; height: 140px; overflow: hidden; border: 1px solid #eee;
+        /* 대체 사이트 링크 영역 */
+        .alt-links { display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap; justify-content: center; }
+        .alt-btn { font-size: 11px; padding: 6px 10px; border: 1px solid #ddd; background: #f8f9fa; border-radius: 15px; text-decoration: none; color: #555; display: flex; align-items: center; gap: 4px; }
+        .alt-btn:hover { background: #e3f2fd; color: var(--primary-color); border-color: var(--primary-color); }
+
+        /* 도면 표시창 */
+        .blueprint-display-area { 
+            margin-top: 15px; border: 2px dashed #cfd8dc; border-radius: 12px; 
+            min-height: 180px; background: #fafafa; position: relative; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            overflow: hidden;
         }
+        .bp-placeholder { text-align: center; color: #90a4ae; pointer-events: none; }
+        .bp-img { width: 100%; height: 100%; object-fit: contain; position: absolute; top:0; left:0; display: none; }
+        .bp-file-input { position: absolute; width: 100%; height: 100%; top:0; left:0; opacity: 0; cursor: pointer; }
         
-        /* 좌측: 사진 영역 (40%) */
-        .photo-area { 
-            width: 40%; background: #f1f3f5; position: relative; 
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            border-right: 1px solid #eee;
+        /* 도면 없음 버튼 */
+        .btn-no-blueprint { 
+            display: block; width: 100%; text-align: center; margin-top: 8px; 
+            font-size: 12px; color: #d32f2f; text-decoration: underline; cursor: pointer; 
+            background: none; border: none;
         }
+
+        /* 입력 카드 */
+        .input-card { background: white; border-radius: 12px; box-shadow: var(--card-shadow); margin-bottom: 10px; display: flex; flex-direction: row; height: 140px; overflow: hidden; border: 1px solid #eee; }
+        .photo-area { width: 40%; background: #f1f3f5; position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; border-right: 1px solid #eee; }
         .photo-area img { width: 100%; height: 100%; object-fit: cover; display: none; }
         .camera-icon { font-size: 24px; margin-bottom: 5px; }
         .photo-hint { font-size: 11px; color: #666; text-align: center; line-height: 1.2; }
-        .photo-hint strong { color: #e53935; }
-
-        /* 우측: 입력 영역 (60%) */
+        .photo-input-hidden { position: absolute; width: 100%; height: 100%; opacity: 0; cursor: pointer; left:0; top:0; z-index: 10; }
         .dim-area { width: 60%; padding: 10px; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
         .row-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
         .row-title { font-size: 15px; font-weight: 800; color: var(--primary-color); }
         .badge-ai { font-size: 10px; background: #e3f2fd; color: #1565c0; padding: 2px 4px; border-radius: 3px; display: none; }
-        
-        select, input[type="number"] { 
-            width: 100%; height: 32px; border: 1px solid #ddd; border-radius: 5px; 
-            font-size: 13px; padding-left: 5px; box-sizing: border-box; background: #fff;
-        }
+        select, input[type="number"] { width: 100%; height: 32px; border: 1px solid #ddd; border-radius: 5px; font-size: 13px; padding-left: 5px; box-sizing: border-box; background: #fff; }
         .size-inputs { display: flex; gap: 5px; }
 
-        /* 로딩 오버레이 */
-        .loading-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.9); z-index: 10;
-            display: none; flex-direction: column; justify-content: center; align-items: center;
-        }
+        /* 로딩 */
+        .loading-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 10; display: none; flex-direction: column; justify-content: center; align-items: center; }
         .spinner { width: 20px; height: 20px; border: 3px solid #ddd; border-top: 3px solid var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* 하단 버튼 및 결과 */
+        /* 버튼 그룹 */
         .btn-group { display: flex; gap: 8px; margin-top: 20px; }
         .btn-main { flex: 1; padding: 15px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; color: white; font-size: 15px; }
         .btn-calc { background: var(--primary-color); }
@@ -129,7 +116,7 @@
         <img src="logo.png" class="logo-clipart" onerror="this.style.background='#eee'">
         <div class="header-content">
             <h1 class="main-title">청개구리 창호견적</h1>
-            <span class="ver-badge">Ver 10.2 Fixed Header</span>
+            <span class="ver-badge">Ver 11.0 Auto Search</span>
         </div>
     </div>
 </header>
@@ -138,20 +125,33 @@
     
     <div class="top-section">
         <div class="address-row">
-            <input type="text" id="aptAddress" placeholder="아파트명 검색 (예: 은마아파트)" readonly onclick="openAddressSearch()">
+            <input type="text" id="aptAddress" placeholder="아파트/건물명 검색" readonly onclick="openAddressSearch()">
             <button class="btn-search" onclick="openAddressSearch()">🔍</button>
         </div>
         <input type="text" class="detail-input" id="detailAddress" placeholder="동/호수 입력">
         
-        <button class="btn-naver" onclick="searchNaverLand()">
-            <span>N</span> 네이버 부동산에서 도면 찾기
+        <button class="btn-auto-search" onclick="autoSearchBlueprint()">
+            <span>🚀</span> 자동 도면 검색
         </button>
 
-        <div class="blueprint-area">
-            <div class="blueprint-text">📸 위에서 찾은 <strong>도면을 캡처</strong>해서 올려주세요! (오차 0mm)</div>
-            <img id="blueprintPreview" class="blueprint-preview">
-            <input type="file" accept="image/*" class="file-hidden" onchange="handleBlueprintUpload(this)">
+        <div class="alt-links">
+            <a href="http://www.molit.go.kr/rtms/" target="_blank" class="alt-btn">🏢 국토부 실거래</a>
+            <a href="https://urbanbase.com/" target="_blank" class="alt-btn">🏠 어반베이스</a>
+            <a href="https://realty.daum.net/" target="_blank" class="alt-btn">🟡 다음 부동산</a>
+            <a href="https://cloud.eais.go.kr/" target="_blank" class="alt-btn">📜 세움터</a>
         </div>
+
+        <div class="blueprint-display-area">
+            <div class="bp-placeholder">
+                <div style="font-size:30px; margin-bottom:5px;">📂</div>
+                <div style="font-size:13px; font-weight:bold;">도면이 보이는 칸</div>
+                <div style="font-size:11px;">(검색된 도면을 캡처해서 여기를 눌러 등록하세요)</div>
+            </div>
+            <img id="blueprintPreview" class="bp-img">
+            <input type="file" accept="image/*" class="bp-file-input" onchange="handleBlueprintUpload(this)">
+        </div>
+
+        <button class="btn-no-blueprint" onclick="alertNoBlueprint()">⚠️ 도면을 찾을 수 없나요?</button>
     </div>
 
     <div id="inputListArea"></div>
@@ -173,7 +173,6 @@
 </footer>
 
 <script>
-    // 전역 변수: 도면 파일
     let globalBlueprintFile = null;
 
     // 1. 주소 찾기
@@ -187,21 +186,31 @@
         }).open();
     }
 
-    // 2. [NEW] 네이버 부동산 검색 기능
-    function searchNaverLand() {
+    // 2. [핵심] 자동 도면 검색 로직
+    function autoSearchBlueprint() {
         const addr = document.getElementById("aptAddress").value;
         if (!addr) {
             alert("먼저 주소를 검색해주세요!");
             return;
         }
-        // 주소에서 핵심 키워드(아파트명)만 추출해서 검색
+        
+        // 검색어 정제 (괄호 제거 등)
         const query = addr.split("(")[0].trim(); 
-        const url = `https://m.land.naver.com/search/result/${encodeURIComponent(query)}`;
-        window.open(url, '_blank');
-        alert("네이버 부동산이 열리면 '단지정보 > 평면도'를 캡처해서 등록해주세요.");
+        
+        // 1순위: 네이버 부동산 (가장 데이터가 많음)
+        const naverUrl = `https://m.land.naver.com/search/result/${encodeURIComponent(query)}`;
+        
+        if(confirm(`'${query}' 도면을 자동으로 검색합니다.\n\n1. 새 창에서 '평면도'를 확인하세요.\n2. 화면을 캡처하세요.\n3. 앱으로 돌아와 '도면이 보이는 칸'에 등록하세요.`)) {
+            window.open(naverUrl, '_blank');
+        }
     }
 
-    // 3. 도면 업로드 처리
+    // 3. [요청사항] 검색 실패 시 알림
+    function alertNoBlueprint() {
+        alert("🚨 자동검색이 안되니 AI실측을 활용하거나 직접 실측의 방법을 적용하셔야 합니다.");
+    }
+
+    // 4. 도면 업로드 및 표시
     function handleBlueprintUpload(input) {
         if (input.files && input.files[0]) {
             globalBlueprintFile = input.files[0];
@@ -210,12 +219,14 @@
                 const img = document.getElementById('blueprintPreview');
                 img.src = e.target.result;
                 img.style.display = 'block';
+                document.querySelector('.bp-placeholder').style.display = 'none';
+                alert("✅ 도면 등록 완료!\n이제 각 방의 사진을 찍으면 AI가 도면 치수를 적용합니다.");
             };
             reader.readAsDataURL(input.files[0]);
         }
     }
 
-    // 4. 입력 카드 생성 (슬림 레이아웃)
+    // UI 생성 및 기능
     const locations = ["거실", "안방", "침실1", "침실2", "침실3", "주방", "발코니1", "발코니2", "터닝도어"];
     const inputArea = document.getElementById('inputListArea');
     const windowOptions = `
@@ -232,20 +243,18 @@
             <div class="input-card">
                 <div class="loading-overlay" id="loading_${index}">
                     <div class="spinner"></div>
-                    <span style="font-size:11px; margin-top:5px; font-weight:bold;">분석중..</span>
+                    <span style="font-size:11px; margin-top:5px; font-weight:bold;">AI 분석중..</span>
                 </div>
-                
                 <div class="photo-area">
                     <div class="camera-icon" id="icon_${index}">📷</div>
                     <div class="photo-hint" id="hint_${index}">사진촬영<br><strong>(A4부착)</strong></div>
                     <img id="preview_${index}">
-                    <input type="file" accept="image/*" class="file-hidden" onchange="window.handleImageUpload(this, ${index})">
+                    <input type="file" accept="image/*" class="photo-input-hidden" onchange="window.handleImageUpload(this, ${index})">
                 </div>
-
                 <div class="dim-area">
                     <div class="row-head">
                         <div class="row-title">NO.${index + 1} ${loc}</div>
-                        <div class="badge-ai" id="badge_${index}">AI 완료</div>
+                        <div class="badge-ai" id="badge_${index}">완료</div>
                     </div>
                     <input type="hidden" id="loc_${index}" value="${loc}">
                     <select id="type_${index}">${windowOptions}</select>
@@ -259,26 +268,17 @@
         inputArea.innerHTML += html;
     });
 
-    // 5. 견적 계산 및 그래프
-    const companyDB = {
-        'A사': { name: 'A사', price: 100 }, 'B사': { name: 'B사', price: 90 }, 'C사': { name: 'C사', price: 120 },
-        'D사': { name: 'D사', price: 95 }, 'E사': { name: 'E사', price: 105 }, 'F사': { name: 'F사', price: 110 }
-    };
-
+    // 견적 계산
+    const companyDB = { 'A사': 100, 'B사': 90, 'C사': 120, 'D사': 95, 'E사': 105, 'F사': 110 };
     function calculateEstimates() {
         let totalPyeong = 0;
         let hasData = false;
-
         for(let i=0; i<9; i++) {
             const w = parseFloat(document.getElementById(`w_${i}`).value) || 0;
             const h = parseFloat(document.getElementById(`h_${i}`).value) || 0;
-            if (w > 0 && h > 0) {
-                totalPyeong += (w * h) / 90000; 
-                hasData = true;
-            }
+            if (w > 0 && h > 0) { totalPyeong += (w * h) / 90000; hasData = true; }
         }
-
-        if (!hasData) { alert("치수를 하나 이상 입력해주세요."); return; }
+        if (!hasData) { alert("치수를 입력해주세요."); return; }
 
         const resultBox = document.getElementById('resultSection');
         const container = document.getElementById('graphContainer');
@@ -286,10 +286,9 @@
         container.innerHTML = '';
 
         let results = [];
-        for (const [key, val] of Object.entries(companyDB)) {
-            // 단순 예시 계산식 (실제 로직은 복잡할 수 있음)
-            const cost = Math.floor(1000000 + (totalPyeong * 10000 * val.price / 100));
-            results.push({ name: val.name, cost: cost });
+        for (const [name, rate] of Object.entries(companyDB)) {
+            const cost = Math.floor(1000000 + (totalPyeong * 10000 * rate / 100));
+            results.push({ name: name, cost: cost });
         }
         results.sort((a, b) => a.cost - b.cost);
         const maxCost = results[results.length - 1].cost;
@@ -297,17 +296,13 @@
         results.forEach((item, idx) => {
             const percent = (item.cost / maxCost) * 100;
             const barClass = idx === 0 ? 'g-bar best' : (idx === 1 ? 'g-bar second' : 'g-bar');
-            
-            const html = `
+            container.innerHTML += `
                 <div class="graph-row">
                     <div class="g-label">${item.name}</div>
                     <div class="g-bar-bg"><div class="${barClass}" style="width:${percent}%"></div></div>
                     <div class="g-price">${(item.cost/10000).toFixed(0)}만</div>
-                </div>
-            `;
-            container.innerHTML += html;
+                </div>`;
         });
-        
         resultBox.scrollIntoView({behavior: "smooth"});
     }
 
@@ -333,7 +328,6 @@
         const file = inputElement.files[0];
         if (!file) return;
 
-        // 미리보기
         const reader = new FileReader();
         reader.onload = function(e) {
             document.getElementById(`icon_${index}`).style.display = 'none';
@@ -344,7 +338,6 @@
         }
         reader.readAsDataURL(file);
 
-        // 로딩 시작
         const loading = document.getElementById(`loading_${index}`);
         loading.style.display = 'flex';
 
@@ -359,34 +352,26 @@
             let prompt = "";
 
             if (window.globalBlueprintFile) {
-                // 도면이 있는 경우
+                // 도면 포함 분석
                 const blueprintPart = await fileToGenerativePart(window.globalBlueprintFile);
                 parts.push(blueprintPart);
                 prompt = `
                     당신은 창호 견적 전문가입니다.
-                    이미지1: 현장(${locationName}) 사진 (A4용지 부착됨)
-                    이미지2: 아파트 평면도(도면)
-
-                    [임무]
-                    1. 도면에서 **${locationName}**의 위치를 찾아 적혀있는 치수(가로x세로)를 읽으세요.
-                    2. 도면 수치가 식별되면 그것을 우선 적용하세요.
-                    3. 식별이 안되면, 현장 사진 속 A4용지(210x297mm)를 기준으로 전체 창틀 크기를 계산하세요.
-                    4. 거실이나 안방은 창문 하나가 아니라 **전체 벽면 너비**를 계산해야 합니다.
+                    [이미지1: 현장 사진, 이미지2: 평면도]
+                    도면에서 **${locationName}** 위치를 찾아 정확한 치수를 읽어내세요.
+                    도면 판독 불가 시 현장 사진의 A4용지(210x297mm) 기준으로 계산하세요.
+                    거실은 전체 벽면 너비를 계산하세요.
                 `;
             } else {
-                // 사진만 있는 경우
+                // 사진 단독 분석
                 prompt = `
                     당신은 창호 견적 전문가입니다.
                     사진 속 **${locationName}** 창문의 전체 틀 크기(가로x세로)를 A4용지(210x297mm) 기준으로 계산하세요.
-                    
-                    [보정 규칙]
-                    - 거실: 3000mm 미만이면 창문 한 짝만 찍힌 것이니 한국 아파트 표준(3600~4500mm)으로 보정하세요.
-                    - 안방/침실: 높이가 1800~2000mm면 발코니창이므로 2200~2300mm로 보정하세요.
-                    - 블라인드: 상단에 있으면 높이 +200mm 하세요.
+                    [보정] 거실 < 3000mm면 3600~4500mm로 보정. 침실 높이 1800~2000mm면 2200mm로 보정.
                 `;
             }
 
-            prompt += ` 오직 JSON으로 답하세요: {"typeCode": "S_BAL" 등, "width": 숫자, "height": 숫자}`;
+            prompt += ` JSON 응답: {"typeCode": "S_BAL" 등, "width": 숫자, "height": 숫자}`;
             parts.unshift(prompt);
 
             const result = await model.generateContent(parts);
