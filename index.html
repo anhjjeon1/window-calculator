@@ -27,19 +27,27 @@
             color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.2); box-sizing: border-box; 
         }
         
-        /* [수정] 업로드하신 로고 스타일 */
         .logo-clipart { 
             width: 45px; height: 45px; 
             background: rgba(255,255,255,0.95); border-radius: 50%; padding: 2px; 
             position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
             box-shadow: 0 2px 5px rgba(0,0,0,0.2); border: 2px solid #69F0AE; 
-            object-fit: cover; /* 이미지가 원 안에 꽉 차게 */
+            object-fit: cover; 
         }
         
         .main-title { margin: 0; font-size: 20px; font-weight: 900; text-align: center; letter-spacing: -0.5px; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+        
+        /* [수정] 버전 배지 스타일: 우측 하단으로 이동 및 크기 축소 */
         .ver-badge { 
-            font-size: 10px; background: #00E676; color: #003300; padding: 3px 8px; border-radius: 12px; font-weight: 800; 
-            position: absolute; right: 15px; top: 50%; transform: translateY(-50%); box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            font-size: 9px; /* 글자 크기 축소 */
+            background: #00E676; color: #003300; 
+            padding: 2px 6px; /* 패딩 축소 */
+            border-radius: 8px; font-weight: 800; 
+            position: absolute; 
+            right: 15px; 
+            bottom: 8px; /* 중앙 정렬 대신 하단 배치 */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            letter-spacing: -0.3px;
         }
 
         .container { max-width: 768px; margin: 0 auto; padding: 15px; padding-top: 80px; padding-bottom: 120px; }
@@ -124,6 +132,15 @@
         .g-bar.second { background: #42A5F5; } 
         .g-price { width: 80px; text-align: right; font-weight: 800; color: #263238; }
 
+        /* [추가] 견적 유의사항 스타일 */
+        .estimate-note {
+            margin-top: 20px; padding-top: 15px; border-top: 1px dashed #cfd8dc;
+            font-size: 11px; color: #546e7a; line-height: 1.6;
+            background: #fafafa; border-radius: 8px; padding: 12px;
+        }
+        .estimate-note p { margin: 0 0 5px 0; }
+        .estimate-note strong { color: #d32f2f; }
+
         footer { text-align: center; font-size: 11px; color: #90a4ae; margin-top: 40px; padding-bottom: 30px; }
     </style>
 </head>
@@ -187,8 +204,9 @@
 </footer>
 
 <script>
-    // [설정] 구글 시트 단가표 주소
-    const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ_0fzDiPb7o94pN5PFBWfYpEcm7hqBhUT2Q1RyWqH78WdEnu4rdRSajOi7KN_bVnDUlaXk7TznbJ7o/pub?gid=560833598&single=true&output=csv";
+    // [수정] 새로운 구글 시트 주소 적용 (output=csv)
+    // ID: 14_VqmDNCfSGbRw-1NRK41Qjq0LlJ9i9NwhFKYHmVpmc, GID: 560833598
+    const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/14_VqmDNCfSGbRw-1NRK41Qjq0LlJ9i9NwhFKYHmVpmc/pub?gid=560833598&single=true&output=csv";
 
     let companyDB = {};
 
@@ -200,7 +218,6 @@
             parseCSV(text);
         } catch (error) {
             console.error("단가표 로딩 실패:", error);
-            // 실패 시 기본값
             companyDB = { 'A사': { name: 'A사', specs: {} } }; 
         }
     }
@@ -366,6 +383,15 @@
                         <div class="g-price">${item.cost.toLocaleString()}원</div>
                     </div>`;
             });
+
+            // [추가] 견적 유의사항 문구 추가 (요청사항 반영)
+            container.innerHTML += `
+                <div class="estimate-note">
+                    <p>※ 업체코드에 <strong>( )</strong> 표기가 있는 곳은 실제 제휴 업체의 단가이며, 나머지는 AI 추정 가상 견적입니다.</p>
+                    <p>※ 위 견적은 <strong>자재비+시공비</strong>가 포함된 순수 시공가격입니다.</p>
+                    <p style="color:#d32f2f;">※ <strong>별도 비용:</strong> 양중비(사다리차 등), 철거비, 마감 옵션(몰딩, 도배, 타일) 등은 현장 여건에 따라 추가됩니다.</p>
+                </div>
+            `;
         } else {
             container.innerHTML += "<div style='text-align:center;'>견적 데이터가 없습니다.</div>";
         }
