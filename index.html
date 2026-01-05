@@ -19,7 +19,7 @@
         :root { --primary-color: #1a73e8; --bg-color: #f0f4f8; --card-shadow: 0 4px 15px rgba(0,0,0,0.08); }
         body { font-family: 'Pretendard', sans-serif; background-color: var(--bg-color); margin: 0; padding: 0; color: #333; -webkit-font-smoothing: antialiased; }
 
-        /* 헤더 */
+        /* 헤더 스타일 */
         header { 
             background: linear-gradient(135deg, #1565C0 0%, #0D47A1 100%); 
             padding: 0 15px; height: 60px; display: flex; align-items: center; justify-content: center;
@@ -27,13 +27,13 @@
             color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.2); box-sizing: border-box; 
         }
         
-        /* [수정] 청개구리 왕자 로고 */
+        /* [수정] 업로드하신 로고 스타일 */
         .logo-clipart { 
             width: 45px; height: 45px; 
-            background: rgba(255,255,255,0.95); border-radius: 50%; padding: 3px; 
+            background: rgba(255,255,255,0.95); border-radius: 50%; padding: 2px; 
             position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2); border: 2px solid #69F0AE; /* 테두리 색상 변경 (초록) */
-            object-fit: cover;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); border: 2px solid #69F0AE; 
+            object-fit: cover; /* 이미지가 원 안에 꽉 차게 */
         }
         
         .main-title { margin: 0; font-size: 20px; font-weight: 900; text-align: center; letter-spacing: -0.5px; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
@@ -130,9 +130,9 @@
 <body>
 
 <header>
-    <img src="https://cdn-icons-png.flaticon.com/512/826/826963.png" class="logo-clipart" alt="청개구리" onerror="this.style.background='#69F0AE'">
+    <img src="image_1.png" class="logo-clipart" alt="청개구리" onerror="this.src='https://cdn-icons-png.flaticon.com/512/826/826963.png';">
     <h1 class="main-title">청개구리 창호견적</h1>
-    <span class="ver-badge">Ver 12.1 FinalFix</span>
+    <span class="ver-badge">Ver 12.3 Custom Logo</span>
 </header>
 
 <div class="container" id="captureArea">
@@ -176,7 +176,7 @@
     </div>
 
     <div class="chart-box" id="resultSection">
-        <div id="resultPlaceholder" class="chart-placeholder-text">업체별 견적 비교</div>
+        <div id="resultPlaceholder" class="chart-placeholder-text">업체별 창호시공 총 견적</div>
         <div id="graphContainer"></div>
     </div>
 </div>
@@ -200,6 +200,7 @@
             parseCSV(text);
         } catch (error) {
             console.error("단가표 로딩 실패:", error);
+            // 실패 시 기본값
             companyDB = { 'A사': { name: 'A사', specs: {} } }; 
         }
     }
@@ -267,7 +268,6 @@
         }
     }
 
-    // 터닝도어 포함 옵션
     const locations = ["거실", "안방", "침실1", "침실2", "침실3", "주방", "발코니1", "발코니2", "터닝도어"];
     const inputArea = document.getElementById('inputListArea');
     const windowOptions = `
@@ -329,9 +329,6 @@
             
             if (w > 0 && h > 0) {
                 let qty = (w * h) / 90000;
-                // 터닝도어 수량 계산 예외처리 (만약 1식 단가라면 w,h 무시하고 1로 설정)
-                // if(type === 'TURNING') qty = 1; 
-                
                 reqList.push({ type: type, qty: qty });
                 hasData = true;
             }
@@ -376,7 +373,6 @@
         resultBox.scrollIntoView({behavior: "smooth"});
     }
 
-    // [수정] 저장 시 스크롤 맨 위로 이동
     function saveAsImage() {
         window.scrollTo(0,0);
         setTimeout(() => {
@@ -386,7 +382,7 @@
                 link.href = canvas.toDataURL();
                 link.click();
             });
-        }, 200); // 시간 넉넉히
+        }, 200);
     }
 </script>
 
