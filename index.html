@@ -16,111 +16,123 @@
     </script>
 
     <style>
-        :root { --primary-color: #1a73e8; --bg-color: #f0f4f8; --card-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        :root { --primary-color: #1a73e8; --bg-color: #f0f4f8; --card-shadow: 0 4px 15px rgba(0,0,0,0.08); }
         body { font-family: 'Pretendard', sans-serif; background-color: var(--bg-color); margin: 0; padding: 0; color: #333; -webkit-font-smoothing: antialiased; }
 
-        /* 헤더 */
+        /* [수정] 헤더 스타일 */
         header { 
-            background: linear-gradient(100deg, #4285f4 0%, #0d47a1 100%); 
+            background: linear-gradient(135deg, #1565C0 0%, #0D47A1 100%); 
             padding: 0 15px; height: 60px; display: flex; align-items: center; justify-content: center;
-            position: fixed; top: 0; left: 0; width: 100%; z-index: 100; 
-            color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); box-sizing: border-box; 
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; 
+            color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.2); box-sizing: border-box; 
         }
+        
+        /* [수정] 고급 청개구리 로고 스타일 */
         .logo-clipart { 
-            width: 40px; height: 40px; background: rgba(255,255,255,0.95); border-radius: 8px; padding: 2px; 
+            width: 45px; height: 45px; 
+            background: rgba(255,255,255,0.9); border-radius: 50%; padding: 3px; 
             position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); border: 2px solid #81D4FA;
+            object-fit: cover;
         }
-        .main-title { margin: 0; font-size: 20px; font-weight: 900; text-align: center; letter-spacing: -0.5px; }
+        
+        .main-title { margin: 0; font-size: 20px; font-weight: 900; text-align: center; letter-spacing: -0.5px; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
         .ver-badge { 
-            font-size: 10px; background: #00e676; color: #000; padding: 3px 6px; border-radius: 4px; font-weight: 800; 
-            position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+            font-size: 10px; background: #00E676; color: #003300; padding: 3px 8px; border-radius: 12px; font-weight: 800; 
+            position: absolute; right: 15px; top: 50%; transform: translateY(-50%); box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
-        .container { max-width: 768px; margin: 0 auto; padding: 15px; padding-top: 75px; padding-bottom: 100px; }
+        .container { max-width: 768px; margin: 0 auto; padding: 15px; padding-top: 80px; padding-bottom: 120px; }
 
         /* 상단 섹션 */
-        .top-section { background: white; border-radius: 12px; padding: 15px; box-shadow: var(--card-shadow); margin-bottom: 15px; }
-        .address-row { display: flex; gap: 5px; margin-bottom: 8px; }
-        .address-row input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 6px; background: #f9f9f9; font-weight: bold; }
-        .btn-search { background: #333; color: white; border: none; padding: 0 12px; border-radius: 6px; font-weight: bold; cursor: pointer; }
-        .detail-input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; margin-bottom: 8px;}
+        .top-section { background: white; border-radius: 16px; padding: 20px; box-shadow: var(--card-shadow); margin-bottom: 20px; }
+        .address-row { display: flex; gap: 8px; margin-bottom: 10px; }
+        .address-row input { flex: 1; padding: 12px; border: 1px solid #e0e0e0; border-radius: 8px; background: #f8f9fa; font-weight: bold; font-size: 14px; }
+        .btn-search { background: #37474F; color: white; border: none; padding: 0 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .detail-input { width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 8px; box-sizing: border-box; margin-bottom: 12px; font-size: 14px; }
         
         .btn-auto-search { 
-            width: 100%; background: linear-gradient(90deg, #03C75A 0%, #008f40 100%); 
-            color: white; border: none; padding: 12px; border-radius: 8px; 
-            font-size: 15px; font-weight: 800; cursor: pointer; 
+            width: 100%; background: linear-gradient(90deg, #00C853 0%, #009624 100%); 
+            color: white; border: none; padding: 14px; border-radius: 10px; 
+            font-size: 16px; font-weight: 800; cursor: pointer; 
             display: flex; align-items: center; justify-content: center; gap: 8px; 
-            box-shadow: 0 4px 6px rgba(3, 199, 90, 0.2); transition: transform 0.1s;
+            box-shadow: 0 4px 10px rgba(0, 200, 83, 0.3); transition: transform 0.1s; margin-bottom: 15px;
         }
         .btn-auto-search:active { transform: scale(0.98); }
 
-        .alt-links { display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap; justify-content: center; }
-        .alt-btn { font-size: 11px; padding: 6px 10px; border: 1px solid #ddd; background: #f8f9fa; border-radius: 15px; text-decoration: none; color: #555; display: flex; align-items: center; gap: 4px; }
-        .alt-btn:hover { background: #e3f2fd; color: var(--primary-color); border-color: var(--primary-color); }
+        .alt-links { display: flex; gap: 6px; margin-bottom: 15px; flex-wrap: wrap; justify-content: center; }
+        .alt-btn { font-size: 11px; padding: 8px 12px; border: 1px solid #eceff1; background: #f5f5f5; border-radius: 20px; text-decoration: none; color: #546e7a; display: flex; align-items: center; gap: 4px; transition: all 0.2s; }
+        .alt-btn:hover { background: #e3f2fd; color: #1565c0; border-color: #bbdefb; }
 
         .blueprint-display-area { 
-            margin-top: 15px; border: 2px dashed #cfd8dc; border-radius: 12px; 
-            min-height: 180px; background: #fafafa; position: relative; 
+            border: 2px dashed #b0bec5; border-radius: 12px; 
+            min-height: 200px; background: #fafafa; position: relative; 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            overflow: hidden;
+            overflow: hidden; cursor: pointer; transition: background 0.2s;
         }
-        .bp-placeholder { text-align: center; color: #90a4ae; pointer-events: none; }
+        .blueprint-display-area:hover { background: #f1f8e9; border-color: #81c784; }
+        .bp-placeholder { text-align: center; color: #78909c; pointer-events: none; }
         .bp-img { width: 100%; height: 100%; object-fit: contain; position: absolute; top:0; left:0; display: none; }
         .bp-file-input { position: absolute; width: 100%; height: 100%; top:0; left:0; opacity: 0; cursor: pointer; }
         
         .btn-no-blueprint { 
-            display: block; width: 100%; text-align: center; margin-top: 8px; 
-            font-size: 12px; color: #d32f2f; text-decoration: underline; cursor: pointer; 
+            display: block; width: 100%; text-align: center; margin-top: 12px; 
+            font-size: 12px; color: #ef5350; text-decoration: underline; cursor: pointer; 
             background: none; border: none;
         }
 
         /* 입력 카드 */
-        .input-card { background: white; border-radius: 12px; box-shadow: var(--card-shadow); margin-bottom: 10px; display: flex; flex-direction: row; height: 140px; overflow: hidden; border: 1px solid #eee; }
-        .photo-area { width: 40%; background: #f1f3f5; position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; border-right: 1px solid #eee; }
+        .input-card { background: white; border-radius: 16px; box-shadow: var(--card-shadow); margin-bottom: 15px; display: flex; flex-direction: row; height: 150px; overflow: hidden; border: 1px solid #f0f0f0; }
+        .photo-area { width: 38%; background: #263238; position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; }
         .photo-area img { width: 100%; height: 100%; object-fit: cover; display: none; }
-        .camera-icon { font-size: 24px; margin-bottom: 5px; }
-        .photo-hint { font-size: 11px; color: #666; text-align: center; line-height: 1.2; }
+        .camera-icon { font-size: 28px; margin-bottom: 5px; color: #fff; opacity: 0.8; }
+        .photo-hint { font-size: 11px; color: #cfd8dc; text-align: center; line-height: 1.4; }
+        .photo-hint strong { color: #80cbc4; }
         .photo-input-hidden { position: absolute; width: 100%; height: 100%; opacity: 0; cursor: pointer; left:0; top:0; z-index: 10; }
-        .dim-area { width: 60%; padding: 10px; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
+        
+        .dim-area { width: 62%; padding: 15px; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
         .row-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
-        .row-title { font-size: 15px; font-weight: 800; color: var(--primary-color); }
-        .badge-ai { font-size: 10px; background: #e3f2fd; color: #1565c0; padding: 2px 4px; border-radius: 3px; display: none; }
-        select, input[type="number"] { width: 100%; height: 32px; border: 1px solid #ddd; border-radius: 5px; font-size: 13px; padding-left: 5px; box-sizing: border-box; background: #fff; }
-        .size-inputs { display: flex; gap: 5px; }
+        .row-title { font-size: 16px; font-weight: 800; color: #37474F; }
+        .badge-ai { font-size: 10px; background: #e3f2fd; color: #1565c0; padding: 2px 6px; border-radius: 4px; display: none; font-weight: bold; }
+        select, input[type="number"] { width: 100%; height: 38px; border: 1px solid #cfd8dc; border-radius: 8px; font-size: 13px; padding-left: 8px; box-sizing: border-box; background: #fff; }
+        .size-inputs { display: flex; gap: 6px; }
 
-        .loading-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 10; display: none; flex-direction: column; justify-content: center; align-items: center; }
-        .spinner { width: 20px; height: 20px; border: 3px solid #ddd; border-top: 3px solid var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; }
+        .loading-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 20; display: none; flex-direction: column; justify-content: center; align-items: center; color: white; }
+        .spinner { width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid #fff; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 8px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* 버튼 그룹 */
-        .btn-group { display: flex; gap: 8px; margin-top: 20px; }
-        .btn-main { flex: 1; padding: 15px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; color: white; font-size: 15px; }
-        .btn-calc { background: var(--primary-color); }
-        .btn-save { background: #ff9800; }
+        .btn-group { display: flex; gap: 10px; margin-top: 25px; }
+        .btn-main { flex: 1; padding: 16px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; color: white; font-size: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: transform 0.1s; }
+        .btn-main:active { transform: scale(0.98); }
+        .btn-calc { background: linear-gradient(135deg, #1a73e8 0%, #1565c0 100%); }
+        .btn-save { background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%); }
 
         /* 결과창 */
         .chart-box { 
-            background: white; padding: 15px; border-radius: 12px; margin-top: 20px; 
-            box-shadow: var(--card-shadow); min-height: 100px;
+            background: white; padding: 20px; border-radius: 16px; margin-top: 25px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1); min-height: 120px;
             display: flex; flex-direction: column; justify-content: center; 
         }
-        .chart-placeholder-text { text-align: center; color: #bdbdbd; font-size: 16px; font-weight: 800; padding: 30px 0; }
-        .graph-row { display: flex; align-items: center; margin-bottom: 10px; font-size: 12px; }
-        .g-label { width: 40px; font-weight: bold; }
-        .g-bar-bg { flex: 1; height: 20px; background: #f0f0f0; margin: 0 10px; border-radius: 4px; overflow: hidden; }
-        .g-bar { height: 100%; background: #90a4ae; width: 0%; transition: width 1s; }
-        .g-bar.best { background: #ff7043; }
-        .g-price { width: 70px; text-align: right; font-weight: bold; }
+        .chart-placeholder-text { text-align: center; color: #cfd8dc; font-size: 16px; font-weight: 800; padding: 30px 0; }
+        
+        .graph-row { display: flex; align-items: center; margin-bottom: 12px; font-size: 13px; }
+        .g-label { width: 50px; font-weight: 700; color: #455a64; }
+        .g-bar-bg { flex: 1; height: 24px; background: #eceff1; margin: 0 12px; border-radius: 6px; overflow: hidden; }
+        .g-bar { height: 100%; background: #b0bec5; width: 0%; transition: width 1s ease-out; }
+        .g-bar.best { background: #FF7043; } /* 1등 색상 */
+        .g-bar.second { background: #42A5F5; } /* 2등 색상 */
+        .g-price { width: 80px; text-align: right; font-weight: 800; color: #263238; }
 
-        footer { text-align: center; font-size: 11px; color: #999; margin-top: 30px; padding-bottom: 20px; }
+        footer { text-align: center; font-size: 11px; color: #90a4ae; margin-top: 40px; padding-bottom: 30px; }
     </style>
 </head>
 <body>
 
 <header>
-    <img src="logo.png" class="logo-clipart" onerror="this.style.background='#eee'">
+    <img src="https://cdn-icons-png.flaticon.com/512/3069/3069172.png" class="logo-clipart" alt="청개구리">
     <h1 class="main-title">청개구리 창호견적</h1>
-    <span class="ver-badge">Ver 11.2 Real-Data</span>
+    <span class="ver-badge">Ver 12.0 Final</span>
 </header>
 
 <div class="container" id="captureArea">
@@ -137,17 +149,17 @@
         </button>
 
         <div class="alt-links">
-            <a href="http://www.molit.go.kr/rtms/" target="_blank" class="alt-btn">🏢 국토부 실거래</a>
+            <a href="http://www.molit.go.kr/rtms/" target="_blank" class="alt-btn">🏢 국토부</a>
             <a href="https://urbanbase.com/" target="_blank" class="alt-btn">🏠 어반베이스</a>
-            <a href="https://realty.daum.net/" target="_blank" class="alt-btn">🟡 다음 부동산</a>
+            <a href="https://realty.daum.net/" target="_blank" class="alt-btn">🟡 다음부동산</a>
             <a href="https://cloud.eais.go.kr/" target="_blank" class="alt-btn">📜 세움터</a>
         </div>
 
         <div class="blueprint-display-area">
             <div class="bp-placeholder">
-                <div style="font-size:30px; margin-bottom:5px;">📂</div>
-                <div style="font-size:13px; font-weight:bold;">도면이 보이는 칸</div>
-                <div style="font-size:11px;">(검색된 도면을 캡처해서 여기를 눌러 등록하세요)</div>
+                <div style="font-size:32px; margin-bottom:8px;">📂</div>
+                <div style="font-size:14px; font-weight:800; color:#546e7a;">도면이 보이는 칸</div>
+                <div style="font-size:11px;">(검색된 도면을 캡처 후 터치하여 등록)</div>
             </div>
             <img id="blueprintPreview" class="bp-img">
             <input type="file" accept="image/*" class="bp-file-input" onchange="handleBlueprintUpload(this)">
@@ -175,13 +187,12 @@
 </footer>
 
 <script>
-    // [중요] 사용자가 제공한 구글 시트 CSV 링크
+    // [설정] 구글 시트 단가표 주소
     const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ_0fzDiPb7o94pN5PFBWfYpEcm7hqBhUT2Q1RyWqH78WdEnu4rdRSajOi7KN_bVnDUlaXk7TznbJ7o/pub?gid=560833598&single=true&output=csv";
 
-    // 단가표 담을 전역 변수
     let companyDB = {};
 
-    // 1. 단가표 데이터 불러오기 (앱 실행 시 자동 실행)
+    // 1. 단가표 로딩
     async function fetchPriceData() {
         try {
             const response = await fetch(GOOGLE_SHEET_CSV_URL);
@@ -189,44 +200,33 @@
             parseCSV(text);
         } catch (error) {
             console.error("단가표 로딩 실패:", error);
-            // 실패 시 사용할 기본값 (백업)
+            // 비상용 기본값
             companyDB = { 'A사': { name: 'A사', specs: {} } }; 
         }
     }
 
-    // 2. CSV 파싱 (구글시트 데이터 -> 앱 데이터 변환)
     function parseCSV(csvText) {
         const rows = csvText.split('\n').map(row => row.split(','));
         const newDB = {};
-
         rows.forEach((row, index) => {
-            if (index === 0) return; // 헤더 제외
+            if (index === 0) return; 
             if (row.length < 5) return; 
-
-            // CSV 컬럼 매핑: A열=식별코드(0), C열=업체명(2), I열=단가(8)
             const code = row[0]?.trim(); 
             const comp = row[2]?.trim();
             const price = parseInt(row[8]?.trim());
-
             if (code && comp && !isNaN(price)) {
                 if (!newDB[comp]) newDB[comp] = { name: comp, specs: {} };
                 newDB[comp].specs[code] = price;
             }
         });
-
         if (Object.keys(newDB).length > 0) {
             companyDB = newDB;
-            console.log("✅ 최신 단가표 로드 완료:", companyDB);
+            console.log("✅ 단가표 연동 완료");
         }
     }
-
-    // 앱 실행 시 바로 단가표 로딩
     fetchPriceData();
 
-    // --------------------------------------------------
-    // 기존 기능 (주소, 도면, 계산 등)
-    // --------------------------------------------------
-    
+    // 2. 기본 기능
     let globalBlueprintFile = null;
 
     function openAddressSearch() {
@@ -241,16 +241,16 @@
 
     function autoSearchBlueprint() {
         const addr = document.getElementById("aptAddress").value;
-        if (!addr) { alert("먼저 주소를 검색해주세요!"); return; }
+        if (!addr) { alert("주소를 먼저 입력해주세요."); return; }
         const query = addr.split("(")[0].trim(); 
         const naverUrl = `https://m.land.naver.com/search/result/${encodeURIComponent(query)}`;
-        if(confirm(`'${query}' 도면을 검색합니다.\n\n1. 도면을 캡처하세요.\n2. '도면이 보이는 칸'에 등록하세요.`)) {
+        if(confirm(`'${query}' 도면을 검색합니다.\n\n1. 평면도를 캡처하세요.\n2. '도면이 보이는 칸'에 등록하세요.`)) {
             window.open(naverUrl, '_blank');
         }
     }
 
     function alertNoBlueprint() {
-        alert("🚨 자동검색이 안되니 AI실측을 활용하거나 직접 실측의 방법을 적용하셔야 합니다.");
+        alert("자동검색이 안되니 AI실측을 활용하거나 직접 실측의 방법을 적용하셔야 합니다.");
     }
 
     function handleBlueprintUpload(input) {
@@ -268,6 +268,7 @@
         }
     }
 
+    // [수정] 터닝도어 추가된 옵션 리스트
     const locations = ["거실", "안방", "침실1", "침실2", "침실3", "주방", "발코니1", "발코니2", "터닝도어"];
     const inputArea = document.getElementById('inputListArea');
     const windowOptions = `
@@ -275,11 +276,21 @@
         <option value="S_BAL">발코니용 단창 (외부)</option>
         <option value="D_IN">내부용 이중창</option>
         <option value="D_EXT">확장형 이중창 (단열↑)</option>
-        <option value="SYS">공틀일체형 / 시스템창</option>
+        <option value="SYS">시스템창 / 분합창</option>
         <option value="PJ">PJ창 / 프로젝트창</option>
+        <option value="TURNING">터닝도어 (단열도어)</option>
     `;
 
     locations.forEach((loc, index) => {
+        // [자동선택 로직] 위치 이름이 '터닝도어'면 기본값을 터닝도어로 설정
+        let defaultSelected = "";
+        if (loc.includes("터닝")) defaultSelected = "TURNING";
+        else if (loc.includes("발코니") || loc.includes("거실")) defaultSelected = "S_BAL";
+        else defaultSelected = "D_IN"; // 방은 보통 이중창
+
+        // 옵션 문자열에서 selected 속성 주입
+        const currentOptions = windowOptions.replace(`value="${defaultSelected}"`, `value="${defaultSelected}" selected`);
+
         const html = `
             <div class="input-card">
                 <div class="loading-overlay" id="loading_${index}">
@@ -298,7 +309,7 @@
                         <div class="badge-ai" id="badge_${index}">완료</div>
                     </div>
                     <input type="hidden" id="loc_${index}" value="${loc}">
-                    <select id="type_${index}">${windowOptions}</select>
+                    <select id="type_${index}">${currentOptions}</select>
                     <div class="size-inputs">
                         <input type="number" id="w_${index}" placeholder="가로 mm">
                         <input type="number" id="h_${index}" placeholder="세로 mm">
@@ -309,10 +320,11 @@
         inputArea.innerHTML += html;
     });
 
-    // [업데이트] 실제 단가표 기반 계산 로직
+    // 3. 견적 계산 및 그래프
     function calculateEstimates() {
+        let totalCost = 0;
         let hasData = false;
-        let reqList = []; // 입력된 창호 리스트
+        let reqList = [];
 
         for(let i=0; i<9; i++) {
             const w = parseFloat(document.getElementById(`w_${i}`).value) || 0;
@@ -320,42 +332,27 @@
             const type = document.getElementById(`type_${i}`).value;
             
             if (w > 0 && h > 0) {
-                // 평수 계산 (가로mm * 세로mm / 90000 = 1평)
-                const pyeong = (w * h) / 90000;
-                reqList.push({ type: type, qty: pyeong });
+                // 평수 계산 (가로*세로 / 90000) -> 터닝도어는 '식' 단위일 수 있으나 여기선 평으로 통일하거나 엑셀 단가표에 맞춰야 함
+                // *단가표가 평 단가로 되어 있으므로 그대로 둡니다. (터닝도어도 1식 가격을 평단가처럼 넣어두셨다면 조정 필요)
+                // *만약 터닝도어가 '1식' 가격이라면 w,h 상관없이 1을 곱해야 합니다.
+                let qty = (w * h) / 90000;
+                if(type === 'TURNING') qty = 1; // 터닝도어는 갯수(1식)로 처리하는 예외 로직
+
+                reqList.push({ type: type, qty: qty });
                 hasData = true;
             }
         }
 
-        if (!hasData) { alert("치수를 입력해주세요."); return; }
+        if (!hasData) { alert("치수를 하나 이상 입력해주세요."); return; }
 
-        // 업체별 총 견적 계산
         let results = [];
         for (const [compName, data] of Object.entries(companyDB)) {
-            let totalCost = 0;
-            let isValid = true;
-
+            let sum = 0;
             reqList.forEach(item => {
-                const unitPrice = data.specs[item.type];
-                if (unitPrice) {
-                    totalCost += unitPrice * item.qty;
-                } else {
-                    // 해당 업체에 그 품목(예: 시스템창) 가격이 없으면 계산 제외하거나 경고
-                    // 여기서는 0원으로 처리하지만, 실제로는 기본값을 두는 게 좋음
-                }
+                const unitPrice = data.specs[item.type] || 0;
+                sum += unitPrice * item.qty;
             });
-
-            // 시공비, 철거비 등 기본 마진 추가 (예: 자재비의 20% + 기본 100만원)
-            // 엑셀에 'BASE' 항목을 추가해서 연동하면 더 정확함
-            // 현재는 단순 자재비 합계로 표시
-            if (totalCost > 0) {
-                results.push({ name: compName, cost: Math.floor(totalCost) });
-            }
-        }
-
-        if (results.length === 0) {
-            alert("단가표 로딩 중이거나 계산할 데이터가 없습니다. 잠시 후 다시 시도해주세요.");
-            return;
+            if (sum > 0) results.push({ name: compName, cost: Math.floor(sum) });
         }
 
         const resultBox = document.getElementById('resultSection');
@@ -363,32 +360,41 @@
         document.getElementById('resultPlaceholder').style.display = 'none';
         resultBox.style.display = 'block';
         
-        container.innerHTML = `<h3 style="margin:0 0 15px 0; text-align:center; font-size:17px; font-weight:800; color:#222;">📊 업체별 예상 견적 (자재비 기준)</h3>`;
+        // [수정] 제목 텍스트 변경
+        container.innerHTML = `<h3 style="margin:0 0 15px 0; text-align:center; font-size:17px; font-weight:800; color:#222;">📊 업체별 창호시공 총 견적</h3>`;
 
-        results.sort((a, b) => a.cost - b.cost); // 최저가 순 정렬
-        const maxCost = results[results.length - 1].cost;
-
-        results.forEach((item, idx) => {
-            const percent = (item.cost / maxCost) * 100;
-            const barClass = idx === 0 ? 'g-bar best' : (idx === 1 ? 'g-bar second' : 'g-bar');
-            container.innerHTML += `
-                <div class="graph-row">
-                    <div class="g-label">${item.name}</div>
-                    <div class="g-bar-bg"><div class="${barClass}" style="width:${percent}%"></div></div>
-                    <div class="g-price">${item.cost.toLocaleString()}원</div>
-                </div>`;
-        });
+        results.sort((a, b) => a.cost - b.cost);
+        if(results.length > 0) {
+            const maxCost = results[results.length - 1].cost;
+            results.forEach((item, idx) => {
+                const percent = (item.cost / maxCost) * 100;
+                const barClass = idx === 0 ? 'g-bar best' : (idx === 1 ? 'g-bar second' : 'g-bar');
+                container.innerHTML += `
+                    <div class="graph-row">
+                        <div class="g-label">${item.name}</div>
+                        <div class="g-bar-bg"><div class="${barClass}" style="width:${percent}%"></div></div>
+                        <div class="g-price">${item.cost.toLocaleString()}원</div>
+                    </div>`;
+            });
+        } else {
+            container.innerHTML += "<div style='text-align:center;'>견적 데이터가 없습니다.</div>";
+        }
         
         resultBox.scrollIntoView({behavior: "smooth"});
     }
 
+    // [수정] 저장 시 헤더 짤림 방지 (스크롤 맨 위로 이동 후 캡처)
     function saveAsImage() {
-        html2canvas(document.body).then(canvas => {
-            const link = document.createElement('a');
-            link.download = '견적결과.png';
-            link.href = canvas.toDataURL();
-            link.click();
-        });
+        window.scrollTo(0,0); // 1. 화면 맨 위로 이동
+        setTimeout(() => {
+            // 2. 잠시 후 캡처 (이동 시간 확보)
+            html2canvas(document.body).then(canvas => {
+                const link = document.createElement('a');
+                link.download = '청개구리_견적결과.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }, 100);
     }
 </script>
 
@@ -433,19 +439,25 @@
                 prompt = `
                     당신은 창호 견적 전문가입니다.
                     [이미지1: 현장 사진, 이미지2: 평면도]
-                    도면에서 **${locationName}** 위치를 찾아 정확한 치수를 읽어내세요.
-                    도면 판독 불가 시 현장 사진의 A4용지(210x297mm) 기준으로 계산하세요.
-                    거실은 전체 벽면 너비를 계산하세요.
+                    도면에서 **${locationName}** 위치를 찾아 정확한 치수(mm)를 읽어내세요.
+                    도면 수치가 보이면 최우선 적용하고, 안 보이면 사진 속 A4용지(210x297mm) 기준으로 계산하세요.
                 `;
             } else {
                 prompt = `
                     당신은 창호 견적 전문가입니다.
-                    사진 속 **${locationName}** 창문의 전체 틀 크기(가로x세로)를 A4용지(210x297mm) 기준으로 계산하세요.
-                    [보정] 거실 < 3000mm면 3600~4500mm로 보정. 침실 높이 1800~2000mm면 2200mm로 보정.
+                    사진 속 **${locationName}** 창문의 전체 프레임 크기(mm)를 A4용지(210x297mm) 기준으로 계산하세요.
+                    거실은 3000mm 미만이면 3600~4500mm로 보정하세요.
                 `;
             }
 
-            prompt += ` JSON 응답: {"typeCode": "S_BAL" 등, "width": 숫자, "height": 숫자}`;
+            prompt += `
+                응답은 오직 JSON으로만:
+                {
+                    "typeCode": "문자열 (S_IN, S_BAL, D_IN, D_EXT, SYS, PJ, TURNING 중 하나. 터닝도어는 TURNING)",
+                    "width": 숫자 (mm),
+                    "height": 숫자 (mm)
+                }
+            `;
             parts.unshift(prompt);
 
             const result = await model.generateContent(parts);
@@ -453,9 +465,9 @@
             const text = response.text().replace(/```json|```/g, "").trim();
             const data = JSON.parse(text);
 
-            document.getElementById(`type_${index}`).value = data.typeCode;
-            document.getElementById(`w_${index}`).value = data.width;
-            document.getElementById(`h_${index}`).value = data.height;
+            if(data.typeCode) document.getElementById(`type_${index}`).value = data.typeCode;
+            if(data.width) document.getElementById(`w_${index}`).value = data.width;
+            if(data.height) document.getElementById(`h_${index}`).value = data.height;
             document.getElementById(`badge_${index}`).style.display = 'block';
 
         } catch (error) {
