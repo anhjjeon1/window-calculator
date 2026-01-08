@@ -84,10 +84,8 @@
         
         .dim-area { width: 62%; padding: 15px; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
         
-        /* 타이틀 영역 스타일 */
         .row-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
         .row-number { font-size: 14px; font-weight: 800; color: #1a73e8; margin-right: 4px; }
-        /* 위치 선택 셀렉트 박스 */
         .loc-select { 
             font-size: 16px; font-weight: 800; color: #37474F; 
             border: none; background: transparent; 
@@ -110,19 +108,84 @@
         .btn-calc { background: linear-gradient(135deg, #1a73e8 0%, #1565c0 100%); }
         .btn-save { background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%); }
 
-        /* 결과창 */
-        .chart-box { background: white; padding: 20px; border-radius: 16px; margin-top: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); min-height: 120px; display: flex; flex-direction: column; justify-content: center; }
-        .chart-placeholder-text { text-align: center; color: #cfd8dc; font-size: 16px; font-weight: 800; padding: 30px 0; }
+        /* [결과창 스타일 개선] */
+        .chart-box { background: white; padding: 0; border-radius: 16px; margin-top: 25px; box-shadow: 0 4px 25px rgba(0,0,0,0.12); min-height: 120px; overflow: hidden; }
+        .chart-header { background: #37474F; color: white; padding: 15px; font-weight: 900; font-size: 16px; text-align: center; border-bottom: 4px solid #263238; }
+        .chart-body { padding: 20px; }
         
-        .graph-row { display: flex; align-items: center; margin-bottom: 12px; font-size: 13px; }
-        .g-label { width: 50px; font-weight: 700; color: #455a64; }
-        .g-bar-bg { flex: 1; height: 24px; background: #eceff1; margin: 0 12px; border-radius: 6px; overflow: hidden; }
-        .g-bar { height: 100%; background: #b0bec5; width: 0%; transition: width 1s ease-out; }
-        .g-bar.best { background: #FF7043; } 
-        .g-bar.second { background: #42A5F5; } 
-        .g-price { width: 80px; text-align: right; font-weight: 800; color: #263238; }
+        /* [중요] 신뢰 안내 문구 */
+        .trust-notice {
+            background-color: #e3f2fd;
+            border-left: 4px solid #1a73e8;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .trust-notice strong { color: #d32f2f; }
 
-        .estimate-note { margin-top: 15px; padding-top: 15px; border-top: 1px dashed #cfd8dc; font-size: 11px; color: #546e7a; line-height: 1.6; background: #fafafa; border-radius: 8px; padding: 12px; }
+        /* [그래프 스타일 전문화] */
+        .graph-row { display: flex; align-items: center; margin-bottom: 15px; position: relative; }
+        .g-label { width: 60px; font-size: 12px; font-weight: 700; color: #455a64; line-height: 1.2; text-align: right; padding-right: 10px; }
+        .g-bar-bg { flex: 1; height: 30px; background: #eceff1; border-radius: 4px; overflow: hidden; position: relative; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); }
+        .g-bar { height: 100%; background: #90a4ae; width: 0%; transition: width 1s ease-out; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; color: white; font-size: 11px; font-weight: bold; border-radius: 0 4px 4px 0; }
+        
+        .g-bar.best { background: linear-gradient(90deg, #FF7043, #D84315); box-shadow: 0 2px 5px rgba(216, 67, 21, 0.3); } 
+        .g-bar.second { background: linear-gradient(90deg, #42A5F5, #1565C0); }
+        
+        .g-price { width: 90px; text-align: right; font-weight: 900; color: #263238; font-size: 14px; margin-left: 8px; }
+        
+        .badge-best { 
+            position: absolute; right: -5px; top: -10px; 
+            background: #FF3D00; color: white; font-size: 9px; padding: 2px 6px; 
+            border-radius: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
+            z-index: 5; animation: bounce 2s infinite;
+        }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+
+        /* [요청] 3D 버튼 그리드 */
+        .company-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0 30px 0;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+        }
+        .comp-btn {
+            padding: 12px 5px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 800;
+            font-size: 11px;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.2); /* 3D 효과 */
+            transition: all 0.1s;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 45px;
+            word-break: keep-all;
+        }
+        .comp-btn:active { transform: translateY(4px); box-shadow: 0 0 0 rgba(0,0,0,0.2); }
+        
+        /* 업체별 고유 색상 */
+        .cb-1 { background: linear-gradient(to bottom, #2980b9, #2c3e50); } /* KCC 스타일 */
+        .cb-2 { background: linear-gradient(to bottom, #c0392b, #8e44ad); } /* LX 스타일 */
+        .cb-3 { background: linear-gradient(to bottom, #27ae60, #16a085); } /* 현대 스타일 */
+        .cb-4 { background: linear-gradient(to bottom, #f39c12, #d35400); } /* 이건 스타일 */
+        .cb-5 { background: linear-gradient(to bottom, #8e44ad, #2c3e50); } /* 재현 스타일 */
+        .cb-6 { background: linear-gradient(to bottom, #7f8c8d, #2c3e50); } /* 기타 스타일 */
+
+        .estimate-note { margin-top: 15px; padding: 15px; font-size: 11px; color: #546e7a; line-height: 1.6; background: #fafafa; border-radius: 8px; border: 1px dashed #cfd8dc; }
 
         /* 상세 견적서 테이블 */
         .detail-table-area { margin-top: 35px; border-top: 2px solid #333; padding-top: 5px; }
@@ -131,9 +194,7 @@
         .d-table td { padding: 8px; border-bottom: 1px solid #eee; text-align: center; color: #555; }
         .d-table td.left { text-align: left; }
         .d-title { font-size: 15px; font-weight: 800; margin: 10px 0 10px 0; display: flex; align-items: center; gap: 5px; }
-
-        /* [수정] 합계 행 스타일 */
-        .total-row td { background: #f9f9f9; border-top: 2px solid #ddd; padding: 12px 8px !important; }
+        .total-row td { background: #fffde7; border-top: 2px solid #ddd; padding: 12px 8px !important; }
 
         footer { text-align: center; font-size: 11px; color: #90a4ae; margin-top: 40px; padding-bottom: 30px; }
     </style>
@@ -143,7 +204,7 @@
 <header>
     <img src="image_1.png" class="logo-clipart" alt="청개구리" onerror="this.src='https://cdn-icons-png.flaticon.com/512/826/826963.png';">
     <h1 class="main-title">청개구리 창호견적</h1>
-    <span class="ver-badge">Ver 12.3 Custom Logo</span>
+    <span class="ver-badge">Ver 13.0 Professional</span>
 </header>
 
 <div class="container" id="captureArea">
@@ -185,12 +246,31 @@
         <button class="btn-main btn-save" onclick="saveAsImage()">📸 저장</button>
     </div>
 
-    <div class="chart-box" id="resultSection">
-        <div id="resultPlaceholder" class="chart-placeholder-text">업체별 창호시공 총 견적</div>
-        <div id="resultAddressDisplay" style="text-align:center; font-weight:bold; color:#1565C0; margin-bottom:15px; font-size:15px; display:none;"></div>
-        
-        <div id="graphContainer"></div>
-        <div id="detailTableContainer"></div>
+    <div class="chart-box" id="resultSection" style="display:none;">
+        <div class="chart-header">📊 업체별 창호시공 총 견적</div>
+        <div class="chart-body">
+            <div id="resultAddressDisplay" style="text-align:center; font-weight:bold; color:#1565C0; margin-bottom:20px; font-size:16px;"></div>
+            
+            <div class="trust-notice">
+                <strong>※ 견적 투명성 안내</strong><br>
+                본 견적은 <strong>자재비와 표준 시공비가 포함된 금액</strong>입니다.<br>
+                단, 현장 여건에 따라 필수적으로 발생하는 <strong>철거비, 양중비(사다리차), 인테리어 마감비</strong>는 제외되어 있습니다.<br>
+                정확한 최종 금액은 담당자의 <strong>무료 방문 실측</strong> 후 투명하게 안내해 드립니다.
+            </div>
+
+            <div id="graphContainer"></div>
+
+            <div class="company-grid">
+                <button class="comp-btn cb-1">KCC<br>(에스터)</button>
+                <button class="comp-btn cb-2">LX하우시스<br>(지인)</button>
+                <button class="comp-btn cb-3">현대<br>(L&C)</button>
+                <button class="comp-btn cb-4">이건창호<br>(슈페리어)</button>
+                <button class="comp-btn cb-5">재현하늘창<br>(스카이)</button>
+                <button class="comp-btn cb-6">영림<br>(프라임)</button>
+            </div>
+
+            <div id="detailTableContainer"></div>
+        </div>
     </div>
 </div>
 
@@ -200,25 +280,18 @@
 </footer>
 
 <script>
-    // [중요] 사용하시던 CSV 링크를 여기 넣어주세요!
     const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ_0fzDiPb7o94pN5PFBWfYpEcm7hqBhUT2Q1RyWqH78WdEnu4rdRSajOi7KN_bVnDUlaXk7TznbJ7o/pub?gid=560833598&single=true&output=csv";
 
     let companyDB = {};
 
-    // 1. 단가표 로딩
     async function fetchPriceData() {
         try {
             const response = await fetch(GOOGLE_SHEET_CSV_URL);
             if (!response.ok) throw new Error("네트워크 오류");
             const text = await response.text();
-            if (text.includes("<!DOCTYPE html>") || text.includes("google.com")) {
-                alert("🚨 [오류] 구글 시트 게시 형식을 'CSV'로 변경해주세요.");
-                return;
-            }
             parseCSV(text);
         } catch (error) {
             console.error("로딩 실패:", error);
-            // alert("❌ 단가표를 불러오지 못했습니다. 링크를 확인해주세요.");
         }
     }
 
@@ -254,12 +327,12 @@
             if (index === 0) return; 
             if (row.length < 5) return; 
 
-            const code = row[0];        // A열
-            const comp = row[2];        // C열
-            const itemName = row[5] || ""; // F열
-            const itemSpec = row[6] || ""; // G열
+            const code = row[0];        
+            const comp = row[2];        
+            const itemName = row[5] || ""; 
+            const itemSpec = row[6] || ""; 
             
-            let priceRaw = row[8] || "0"; // I열
+            let priceRaw = row[8] || "0"; 
             priceRaw = priceRaw.replace(/,/g, '').replace(/"/g, '');
             const price = parseInt(priceRaw);
 
@@ -276,7 +349,6 @@
     }
     fetchPriceData();
 
-    // 2. 기본 기능
     let globalBlueprintFile = null;
 
     function openAddressSearch() {
@@ -318,7 +390,6 @@
         }
     }
 
-    // 11개 장소 목록
     const defaultLocations = [
         "거실", "안방", "침실1", "침실2", "침실3", "침실4", 
         "발코니1", "발코니2", "세탁실", "주방", "중문"
@@ -390,17 +461,14 @@
         else typeSelect.value = "D_IN"; 
     };
 
-    // 3. 견적 계산 및 상세 출력
     function calculateEstimates() {
         let hasData = false;
         let reqList = [];
 
-        // [수정] 주소 표시
         const fullAddr = document.getElementById('aptAddress').value + " " + document.getElementById('detailAddress').value;
         const addrDisplay = document.getElementById('resultAddressDisplay');
         if(fullAddr.trim().length > 1) {
-            addrDisplay.innerText = "📍 현장: " + fullAddr;
-            addrDisplay.style.display = "block";
+            addrDisplay.innerText = "📍 " + fullAddr;
         }
 
         for(let i=0; i<11; i++) { 
@@ -439,45 +507,47 @@
         const container = document.getElementById('graphContainer');
         const detailContainer = document.getElementById('detailTableContainer');
         
-        document.getElementById('resultPlaceholder').style.display = 'none';
         resultBox.style.display = 'block';
-        
-        container.innerHTML = `<h3 style="margin:0 0 15px 0; text-align:center; font-size:17px; font-weight:800; color:#222;">📊 업체별 창호시공 총 견적</h3>`;
+        container.innerHTML = "";
 
         results.sort((a, b) => a.cost - b.cost);
         
         if(results.length > 0) {
-            // 1. 그래프 출력
             const maxCost = results[results.length - 1].cost;
             results.forEach((item, idx) => {
                 const percent = (item.cost / maxCost) * 100;
                 const barClass = idx === 0 ? 'g-bar best' : (idx === 1 ? 'g-bar second' : 'g-bar');
+                
+                // [요청 3] 전문 업체 느낌의 그래프 (배지 추가)
+                let badge = "";
+                if(idx === 0) badge = "<div class='badge-best'>BEST VALUE</div>";
+
                 container.innerHTML += `
                     <div class="graph-row">
                         <div class="g-label">${item.name}</div>
-                        <div class="g-bar-bg"><div class="${barClass}" style="width:${percent}%"></div></div>
-                        <div class="g-price">${item.cost.toLocaleString()}원</div>
+                        <div class="g-bar-bg">
+                            <div class="${barClass}" style="width:${percent}%"></div>
+                            ${badge}
+                        </div>
+                        <div class="g-price">${(item.cost/10000).toFixed(0)}만원</div>
                     </div>`;
             });
 
-            // [수정] 2. 모든 업체 상세 견적서 생성 (반복문)
             let allDetailsHtml = "";
-
             results.forEach(companyRes => {
                 const compName = companyRes.name;
                 const compData = companyDB[compName];
                 
                 allDetailsHtml += `
                     <div class="detail-table-area">
-                        <div class="d-title">📑 상세 견적 명세서 <span style="font-size:12px; color:#1a73e8; font-weight:normal;">(${compName})</span></div>
+                        <div class="d-title">📑 상세 견적서 <span style="font-size:12px; color:#1a73e8; font-weight:normal;">[${compName}]</span></div>
                         <table class="d-table">
                             <thead>
                                 <tr>
                                     <th width="15%">위치</th>
-                                    <th width="20%">구분</th>
-                                    <th width="25%">규격/스펙</th>
-                                    <th width="15%">수량</th>
-                                    <th width="25%">예상금액</th>
+                                    <th width="25%">규격</th>
+                                    <th width="35%">모델/스펙</th>
+                                    <th width="25%">금액</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -491,32 +561,26 @@
                     
                     if (specInfo) {
                         price = Math.floor(specInfo.price * item.qty);
-                        specText = `${specInfo.name || ""}<br><span style="color:#888; font-size:11px;">${specInfo.desc || ""}</span>`;
+                        specText = `${specInfo.name}`;
                     } else {
                         specText = "<span style='color:red;'>단가없음</span>";
                     }
                     
-                    const qtyDisplay = (item.type === "TURNING") ? "1식" : `${item.qty.toFixed(1)}평`;
-                    
                     allDetailsHtml += `
                         <tr>
                             <td>${item.loc}</td>
-                            <td class="left">${item.typeName}</td>
-                            <td class="left">${item.w}x${item.h}<br>${specText}</td>
-                            <td>${qtyDisplay}</td>
+                            <td>${item.w}x${item.h}</td>
+                            <td class="left" style="font-size:11px;">${specText}</td>
                             <td style="font-weight:bold; color:#1a73e8;">${price.toLocaleString()}</td>
                         </tr>
                     `;
                     totalSum += price;
                 });
                 
-                // [수정] 총 합계 레이아웃 개선 (줄바꿈 방지)
-                // "총 합계"를 3칸 차지하게 하고 중앙 정렬
-                // 금액을 마지막 2칸 차지하게 하고 좌측 정렬(여백 확보) + 줄바꿈 금지(nowrap)
                 allDetailsHtml += `
                             <tr class="total-row">
-                                <td colspan="3" style="text-align:center; font-weight:800; font-size:14px;">총 합계</td>
-                                <td colspan="2" style="text-align:left; color:#d32f2f; font-size:15px; font-weight:900; white-space:nowrap;">
+                                <td colspan="3" style="text-align:center; font-weight:800; font-size:14px;">총 견적 합계</td>
+                                <td style="text-align:right; color:#d32f2f; font-size:15px; font-weight:900; white-space:nowrap;">
                                     ${totalSum.toLocaleString()}원
                                 </td>
                             </tr>
@@ -526,11 +590,9 @@
                 `;
             });
 
-            // 안내 문구는 마지막에 한 번만 표시
             allDetailsHtml += `
                 <div class="estimate-note">
-                    <p>※ 위 견적은 자재비와 시공비가 포함된 가격입니다.</p>
-                    <p>※ <strong>별도 비용:</strong> 철거비, 사다리차(양중비), 마감공사비(몰딩/타일) 제외.</p>
+                    <p>※ 본 견적은 AI 자동 산출 결과로, 실제 실측 시 창호 등급 및 옵션에 따라 금액이 변동될 수 있습니다.</p>
                 </div>
             `;
 
