@@ -191,17 +191,18 @@
 
         .graph-row { display: flex; align-items: center; margin-bottom: 15px; position: relative; }
         .g-label { width: 80px; font-size: 12px; font-weight: 700; color: #546e7a; text-align: right; padding-right: 12px; }
-        .g-bar-bg { flex: 1; height: 24px; background: #eceff1; border-radius: 12px; overflow: visible; }
+        .g-bar-bg { flex: 1; height: 24px; background: #eceff1; border-radius: 12px; overflow: visible; position: relative; } /* position relative 추가 */
         .g-bar { 
             height: 100%; background: #cfd8dc; width: 0%; transition: width 1s ease-out; 
-            border-radius: 12px; position: relative; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            border-radius: 12px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
         }
         .g-bar.best { background: linear-gradient(90deg, #ff3d00, #dd2c00); } 
         .g-bar.second { background: linear-gradient(90deg, #2196f3, #1976d2); }
         .g-price { width: 85px; text-align: right; font-weight: 800; color: #263238; font-size: 14px; margin-left: 8px; }
         
+        /* [수정] 배지 위치 상단 이동 */
         .badge-best { 
-            position: absolute; right: -5px; top: -10px; 
+            position: absolute; right: -5px; top: -18px; /* -10px 에서 -18px로 더 올림 */
             background: #d50000; color: white; font-size: 10px; padding: 2px 8px; 
             border-radius: 10px; font-weight: 800; z-index: 10; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
@@ -225,7 +226,7 @@
 <header>
     <img src="image_1.png" class="logo-clipart" alt="청개구리 로고" onerror="this.style.display='none';"> 
     <h1 class="main-title">청개구리 창호견적</h1>
-    <span class="ver-badge">Ver 15.2 AI</span>
+    <span class="ver-badge">Ver 15.3 AI</span>
 </header>
 
 <div class="container" id="captureArea">
@@ -629,7 +630,6 @@
                 `;
             });
 
-            // [수정 2] 띄어쓰기 조정한 하단 안내 문구
             allDetailsHtml += `
                 <div class="estimate-note">
                     ※ 위 견적은 인공지능(AI) 기반의 예상견적입니다. 정확한 금액은 현장실측 및 옵션선택에 따라 달라질 수 있습니다.
