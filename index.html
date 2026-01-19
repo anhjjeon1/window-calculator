@@ -31,6 +31,7 @@
             --text-color: #263238;
             --card-shadow: 0 4px 20px rgba(0,0,0,0.08);
             --border-radius: 12px;
+            --dev-color: #6200EA; /* 개발자 모드 색상 (보라색) */
         }
         body { 
             font-family: 'Pretendard', sans-serif; background-color: var(--bg-color); 
@@ -50,11 +51,24 @@
             object-fit: contain; backdrop-filter: blur(4px);
         }
         .main-title { margin: 0; font-size: 18px; font-weight: 800; color: white; letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        
+        /* [수정] 버전 배지: 히든 버튼 기능을 위해 스타일 강화 */
         .ver-badge { 
             font-size: 10px; background: var(--accent-color); color: #003300; 
             padding: 3px 8px; border-radius: 20px; font-weight: 800; 
             position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            cursor: pointer; /* 클릭 가능 표시 */
+            user-select: none; /* 드래그 방지 */
+            transition: all 0.3s ease;
+        }
+        /* 개발자 모드 활성화 시 스타일 */
+        .ver-badge.dev-active {
+            background: var(--dev-color) !important;
+            color: white;
+            box-shadow: 0 0 10px rgba(98, 0, 234, 0.8);
+            transform: translateY(-50%) scale(1.1);
+            border: 1px solid #fff;
         }
 
         .container { max-width: 600px; margin: 0 auto; padding: 20px; padding-top: 80px; padding-bottom: 100px; }
@@ -191,7 +205,7 @@
 
         .graph-row { display: flex; align-items: center; margin-bottom: 15px; position: relative; }
         .g-label { width: 80px; font-size: 12px; font-weight: 700; color: #546e7a; text-align: right; padding-right: 12px; }
-        .g-bar-bg { flex: 1; height: 24px; background: #eceff1; border-radius: 12px; overflow: visible; position: relative; } /* position relative 추가 */
+        .g-bar-bg { flex: 1; height: 24px; background: #eceff1; border-radius: 12px; overflow: visible; position: relative; } 
         .g-bar { 
             height: 100%; background: #cfd8dc; width: 0%; transition: width 1s ease-out; 
             border-radius: 12px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
@@ -200,9 +214,8 @@
         .g-bar.second { background: linear-gradient(90deg, #2196f3, #1976d2); }
         .g-price { width: 85px; text-align: right; font-weight: 800; color: #263238; font-size: 14px; margin-left: 8px; }
         
-        /* [수정] 배지 위치 상단 이동 */
         .badge-best { 
-            position: absolute; right: -5px; top: -18px; /* -10px 에서 -18px로 더 올림 */
+            position: absolute; right: -5px; top: -18px; 
             background: #d50000; color: white; font-size: 10px; padding: 2px 8px; 
             border-radius: 10px; font-weight: 800; z-index: 10; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
@@ -226,7 +239,7 @@
 <header>
     <img src="image_1.png" class="logo-clipart" alt="청개구리 로고" onerror="this.style.display='none';"> 
     <h1 class="main-title">청개구리 창호견적</h1>
-    <span class="ver-badge">Ver 15.3 AI</span>
+    <span class="ver-badge" id="verBadge" onclick="window.checkDevMode()">Ver 15.3 AI</span>
 </header>
 
 <div class="container" id="captureArea">
@@ -310,6 +323,71 @@
         "LX(신창)": "010-2616-8014",
         "현대(위니드)": "010-2159-5911"
     };
+
+    // [추가] 개발자 모드(치트키) 관련 변수
+    let clickCount = 0;
+    let clickTimer;
+    const DAILY_LIMIT = 100;
+
+    // [추가] 페이지 로드 시 개발자 모드 상태 확인하여 배지 스타일 적용
+    window.addEventListener('DOMContentLoaded', () => {
+        const isDev = localStorage.getItem('is_developer') === 'true';
+        if (isDev) {
+            document.getElementById('verBadge').classList.add('dev-active');
+        }
+    });
+
+    // [추가] 히든 버튼(치트키) 로직: 1초 내에 5번 클릭 시 모드 전환
+    window.checkDevMode = function() {
+        clearTimeout(clickTimer); // 이전 타이머 초기화
+        clickCount++;
+
+        if (clickCount === 5) {
+            // 토글 로직
+            const isDev = localStorage.getItem('is_developer') === 'true';
+            localStorage.setItem('is_developer', !isDev);
+            
+            const badge = document.getElementById('verBadge');
+            
+            if (!isDev) {
+                alert("🐸 개발자 모드(무제한)가 활성화되었습니다!");
+                badge.classList.add('dev-active');
+            } else {
+                alert("개발자 모드가 해제되었습니다. (일일 100회 제한 적용)");
+                badge.classList.remove('dev-active');
+            }
+            clickCount = 0;
+        }
+
+        // 1초 뒤 클릭 횟수 초기화
+        clickTimer = setTimeout(() => {
+            clickCount = 0;
+        }, 1000);
+    }
+
+    // [추가] 일일 사용량 체크 함수 (글로벌 스코프)
+    window.checkDailyLimit = function() {
+        const isDev = localStorage.getItem('is_developer') === 'true';
+        if (isDev) return true; // 개발자는 무조건 통과
+
+        const today = new Date().toDateString(); // 예: "Mon Jan 19 2026"
+        let usageData = JSON.parse(localStorage.getItem('window_ai_usage') || '{}');
+
+        // 날짜가 다르면 초기화
+        if (usageData.date !== today) {
+            usageData = { date: today, count: 0 };
+        }
+
+        if (usageData.count >= DAILY_LIMIT) {
+            alert(`⚠️ 일일 무료 사용 한도(${DAILY_LIMIT}회)를 초과했습니다.\n내일 다시 이용해 주세요.`);
+            return false; // 차단
+        }
+        
+        // 통과 시 카운트 증가 저장
+        usageData.count++;
+        localStorage.setItem('window_ai_usage', JSON.stringify(usageData));
+        return true;
+    }
 
     async function fetchPriceData() {
         try {
@@ -669,6 +747,12 @@
     window.handleImageUpload = async function(inputElement, index) {
         const file = inputElement.files[0];
         if (!file) return;
+
+        // [추가] 일일 사용량 제한 체크 (파일 선택 시점)
+        if (!window.checkDailyLimit()) {
+            inputElement.value = ""; // 선택 취소
+            return;
+        }
 
         const reader = new FileReader();
         reader.onload = function(e) {
